@@ -11,6 +11,7 @@ import os
 import platform
 import sys
 import traceback
+import settings
 #from OSGridConverter import latlong2grid 
 
 platform_windows='Windows'
@@ -28,23 +29,25 @@ west='W'
 
 readGPS=True
 class GPSListener(threading.Thread):
-    def __init__(self):
+    def __init__(self, comportName, comportSpeed, precision, showoutput):
         threading.Thread.__init__(self)
         self.readGPS=False
         try:
-            self.status="GPS Running"
-            self.location_precision=6
-            self.location_precision=self.getLocatorPrecision()
             
-            self.comport = ''
+            self.status="GPS Running"
+           
+            self.location_precision=int(precision)
 
-            self.comport = self.getComportName();
+            self.comPort = comportName
+            
+            self.comPortSpeed = comportSpeed
 
+            self.showOutput=showoutput
             #set COM3 for testing. the config should have loaded 
             #and the correct com port sent in which will be set later.
         
             print('Location Precision is %s' % (self.location_precision,))
-            print('Initializing GPS on '+self.comport+'. Please wait....')
+            print('Initializing GPS on '+self.comPort+'. Com port speed='+self.comPortSpeed+'. Please wait....')
             
             self.current_ngr = None
             self.current_epoch = None
@@ -55,9 +58,9 @@ class GPSListener(threading.Thread):
 
             self.mh_grid = None
 
-            comportspeed=self.getComPortSpeed()
+            #comportspeed=self.getComPortSpeed()
             
-            self.gps = serial.Serial(self.comport,comportspeed)
+            self.gps = serial.Serial(self.comPort,self.comPortSpeed)
             
             self.readGPS=True
         except:
@@ -68,82 +71,7 @@ class GPSListener(threading.Thread):
         self.status=statusString  
     def getStatus(self):
         return self.status
-    def getSettingValue(self,section,setting):
-        global configfilename    
-        
-        self.createConfigFile(configfilename)
-        val = None
-        if os.path.isfile(configfilename):
-            config = configparser.ConfigParser()
-            config.read(configfilename)
-            val=config.get(section, setting)
-        
-        return val
-        
-    def getLocatorPrecision(self):
-        
-        prec=self.getSettingValue('LOCATOR', 'precision')
-            
-        p = 4
-        if prec!=None:
-            p=int(prec)
-            
-        return p
 
-    def getComportOption(self):
-    
-        comportoption = self.getSettingValue('HARDWARE','option')
-        
-        if comportoption==None and platform.system()==platform_windows:
-            comport = 'com'
-        elif comportoption==None and platform.system()==platform_linux:
-            comport = 'gpsd'
-        else:
-            comport = 'unknown'
-    
-        return comport
-    
-    def getComportName(self):
-
-        comport = self.getSettingValue('HARDWARE','gpscomport')
-        
-        if comport==None and platform.system()==platform_windows:
-            comport = 'COM8'
-    
-        return comport
-    
-    def getComPortSpeed(self):
-        
-        comPortSpeed = self.getSettingValue('HARDWARE', 'gpsportspeed')
-        
-        if comPortSpeed==None:
-            comPortSpeed='9600'
-        
-        return int(comPortSpeed)
-    def getShowOutput(self):
-        
-        showoutput = self.getSettingValue('SORTWARE', 'showoutput')
-        
-        if showoutput==None:
-            showoutput='0'
-        
-        return int(showoutput)
-    
-    def createConfigFile(self, configFileName):
-        #cretes the config file if it does not exist
-        if not os.path.isfile(configFileName):
-            
-            config = configparser.ConfigParser()
-            config['HARDWARE'] = {'gpscomport': 'COM8',
-                                  'gpsportspeed': '9600',
-                                  'device': 'com'
-                              }
-            config['LOCATOR'] = {'precision': 4
-                              }
-            
-            with open(configFileName, 'w') as configfile:
-                config.write(configfile)
-                configfile.close()
     def getAltitude(self):
         return self.altitude
     def getCurrentLat(self):
@@ -154,7 +82,7 @@ class GPSListener(threading.Thread):
         self.current_latlon = str(self.current_lat)+" "+str(self.current_lon)
         return self.current_latlon
     def get_current_epoch(self):
-        return current_epoch
+        return self.current_epoch
     def get_ngr(self):
         return ""
         #return self.current_ngr
@@ -162,8 +90,9 @@ class GPSListener(threading.Thread):
         return self.mhGrid
     def setReadGPS(self, read):
         self.readGPS = read
+        
     def run(self):
-        showoutput=self.getShowOutput()
+        showoutput=self.showOutput
         
         try:
             while self.readGPS:
