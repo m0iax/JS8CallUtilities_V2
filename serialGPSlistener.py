@@ -6,6 +6,7 @@ import threading
 import configparser
 import time
 import serial
+from serial import Serial
 import maidenhead as mh
 import os
 import platform
@@ -61,7 +62,7 @@ class GPSListener(threading.Thread):
             #comportspeed=self.getComPortSpeed()
             
            # self.gps = serial.Serial(self.comPort,self.comPortSpeed)
-            self.gps = serial.Serial(port=self.comPort, baudrate=self.comPortSpeed)
+            self.gps = Serial(port=self.comPort, baudrate=self.comPortSpeed)
             
             self.readGPS=True
         except:
