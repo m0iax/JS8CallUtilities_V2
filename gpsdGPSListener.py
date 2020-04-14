@@ -61,6 +61,10 @@ class GpsListener(threading.Thread):
         return self.current_lon
     def get_current_lat(self):
         return self.current_lat
+    def getCurrentLat(self):
+        return self.current_lat
+    def getCurrentLon(self):
+        return self.current_lon
     def get_current_latlon(self):
         self.current_latlon = self.current_lat+" "+self.current_lon
         return self.current_latlon
