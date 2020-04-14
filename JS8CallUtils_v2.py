@@ -394,9 +394,11 @@ class App(Tk):
            # js8callAPIsupport.js8CallUDPAPICalls.showMessage(MSG_ERROR, getStatus()))
             self.showMessage('ERROR', 'GPS Listener not running. Update settings and try again.')
             return
-        print('Getting Grid from GPS')
+        if self.showoutput==1:
+            print('Getting Grid from GPS')
         gpsText = self.gpsl.getMaidenhead()
-        print(gpsText)
+        if self.showoutput==1:
+            print(gpsText)
         if gpsText==None:
             gpsText = "No Fix"
         
@@ -568,7 +570,7 @@ class App(Tk):
                                                             self.showoutput
                                                             )
                 else:
-                    print('Runnig serial gps again')
+                    print('Running serial gps again')
                     self.gpsl = serialGPSlistener.GPSListener(self.settingValues.getGPSHardwareSettingValue('gpscomport'),
                                                             self.settingValues.getGPSHardwareSettingValue('gpsportspeed'),
                                                             self.settingValues.getAppSettingValue('precision'),

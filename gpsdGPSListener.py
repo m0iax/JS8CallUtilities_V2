@@ -93,7 +93,7 @@ class GpsListener(threading.Thread):
                     self.locator_precision=4
                     
                 data = self.session.next()
-                if self.showdebug:
+                if self.showdebug==1:
                     print(data)
                 if data['class'] == 'TPV':
                     
