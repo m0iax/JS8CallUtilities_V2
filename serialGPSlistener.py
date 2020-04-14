@@ -64,6 +64,7 @@ class GPSListener(threading.Thread):
            # self.gps = serial.Serial(self.comPort,self.comPortSpeed)
             self.gps = Serial(port=self.comPort, baudrate=self.comPortSpeed)
             
+            
             self.readGPS=True
         except:
             print("I'm having a problem getting data from your GPS, error message below:")
