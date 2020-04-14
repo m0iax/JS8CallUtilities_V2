@@ -60,7 +60,8 @@ class GPSListener(threading.Thread):
 
             #comportspeed=self.getComPortSpeed()
             
-            self.gps = serial.Serial(self.comPort,self.comPortSpeed)
+           # self.gps = serial.Serial(self.comPort,self.comPortSpeed)
+            self.gps = serial.Serial(port=self.comPort, baudrate=self.comPortSpeed)
             
             self.readGPS=True
         except:
