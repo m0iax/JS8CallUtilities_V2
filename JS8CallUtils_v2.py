@@ -1,3 +1,5 @@
+#! /usr/bin/python3
+
 from tkinter import *
 from tkinter.ttk import Combobox
 from tkinter.scrolledtext import ScrolledText
