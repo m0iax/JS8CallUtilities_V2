@@ -559,7 +559,7 @@ class App(Tk):
                 self.gpsl=None
             if self.gpsOption!='None':
                 print('Starting GPS Listener')
-                if self.gpsOption=='gpsd':
+                if self.gpsOption=='GPSD':
                     self.gpsl = gpsdGPSListener.GpsListener()
                 else:
                     print('Runnig serial gps again')
@@ -612,7 +612,7 @@ class App(Tk):
         self.gpsl=None
         
         if self.gpsOption!="None":
-            if self.gpsOption=='gpsd':
+            if self.gpsOption=='GPSD':
                 self.gpsl = gpsdGPSListener.GpsListener()
             else:
                 self.gpsl = serialGPSlistener.GPSListener(self.settingValues.getGPSHardwareSettingValue('gpscomport'),
