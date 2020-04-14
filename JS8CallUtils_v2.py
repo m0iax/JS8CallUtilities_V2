@@ -412,6 +412,8 @@ class App(Tk):
         
             if self.gpsl.getStatus().startswith('Error'):
                 self.gpsText=self.gpsl.getStatus()
+                lat=None
+                lon=None
                 latlon=self.gpsl.getStatus()
             else:
                 lat=self.gpsl.getCurrentLat()
@@ -560,7 +562,9 @@ class App(Tk):
             if self.gpsOption!='None':
                 print('Starting GPS Listener')
                 if self.gpsOption=='GPSD':
-                    self.gpsl = gpsdGPSListener.GpsListener()
+                    self.gpsl = gpsdGPSListener.GpsListener( self.settingValues.getAppSettingValue('precision'),
+                                                            self.showoutput
+                                                            )
                 else:
                     print('Runnig serial gps again')
                     self.gpsl = serialGPSlistener.GPSListener(self.settingValues.getGPSHardwareSettingValue('gpscomport'),
@@ -613,7 +617,9 @@ class App(Tk):
         
         if self.gpsOption!="None":
             if self.gpsOption=='GPSD':
-                self.gpsl = gpsdGPSListener.GpsListener()
+                self.gpsl = gpsdGPSListener.GpsListener( self.settingValues.getAppSettingValue('precision'),
+                                                        self.showoutput
+                                                        )
             else:
                 self.gpsl = serialGPSlistener.GPSListener(self.settingValues.getGPSHardwareSettingValue('gpscomport'),
                                                         self.settingValues.getGPSHardwareSettingValue('gpsportspeed'),

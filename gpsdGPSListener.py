@@ -23,9 +23,12 @@ def setexit(flag):
 class GpsListener(threading.Thread):
     def setReadGPS(self, set):
        self.readGPS=set
-    def __init__(self):
+    def __init__(self, precision, showoutput):
         try:
             threading.Thread.__init__(self)
+            
+            self.locator_precision=precision
+            self.showdebug = showoutput
             self.readGPS=False
             self.status=""
             self.current_ngr = None
@@ -37,56 +40,12 @@ class GpsListener(threading.Thread):
             self.current_latlon = None
             self.runFlag=True
             self.enabled=False
-            self.locator_precision=self.getLocatorPrecision()
             self.session = gps(mode=WATCH_ENABLE)
             self.readGPS=True
        
         except:
             self.setStatus("Error initilizing GPS, check com port and restart this app.")
-    def getSettingValue(self,section,setting):
-        global configfilename    
-        
-        self.createConfigFile(configfilename)
-        val = None
-        if os.path.isfile(configfilename):
-            config = configparser.ConfigParser()
-            config.read(configfilename)
-            val=config.get(section, setting)
-        
-        return val
-        
-    def getLocatorPrecision(self):
-        
-        prec=self.getSettingValue('LOCATOR', 'precision')
-            
-        p = 4
-        if prec!=None:
-            p=int(prec)
-            
-        return p
-    
-    def getComportName(self):
-
-        comport = self.getSettingValue('HARDWARE','gpscomport')
-        
-        if comport==None: #and platform.system()==platform_windows:
-            comport = 'COM8'
-    
-        return comport
-    
-    def createConfigFile(self, configFileName):
-        #cretes the config file if it does not exist
-        if not os.path.isfile(configFileName):
-            
-            config = configparser.ConfigParser()
-            config['HARDWARE'] = {'gpscomport': 'COM8'
-                              }
-            config['LOCATOR'] = {'precision': 4
-                              }
-            
-            with open(configFileName, 'w') as configfile:
-                config.write(configfile)
-                configfile.close()    
+  
     def setStatus(self, statusString):
         self.status=statusString  
     def getStatus(self):
@@ -125,14 +84,16 @@ class GpsListener(threading.Thread):
     def run(self):
         try:
             while self.readGPS:
+                
                 if self.locator_precision==None:
                     self.locator_precision=4
                     
                 data = self.session.next()
-                #print(data)
+                if self.showdebug:
+                    print(data)
                 if data['class'] == 'TPV':
                     
-                    lat= getattr(data,'lat',0.0)
+                    lat = getattr(data,'lat',0.0)
                     lon = getattr(data, 'lon', 0.0)
 #            
                     gpstime = getattr(data,'time', 0)
@@ -149,20 +110,8 @@ class GpsListener(threading.Thread):
                         self.current_gpstime = gpstime
                         self.current_mhgrid = grid
                         currentMHGrid = grid
-                        
-                        #try:
-                        #    if grid != 'JJ00aa00':
-                                #g=latlong2grid(lat,lon)
-                                #self.current_ngr = str(g)
-                        #    else:
-                        #        self.current_ngr = ''
-     
-                        #except:
-                        #    self.current_ngr = ''
- 
+                       
                 time.sleep(1)
-                
-                
                 
         except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
             print ("\nKilling Thread...")

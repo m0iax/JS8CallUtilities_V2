@@ -56,7 +56,7 @@ class Settings():
                             }
             config['GPSHARDWARE'] = {'gpscomport': 'COM15',
                                     'gpsportspeed': '9600',
-                                    'option': 'GPSD',
+                                    'option': 'None',
                                     }
             config['DEBUG'] = {'showoutput': 0 }
            
