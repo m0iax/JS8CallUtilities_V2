@@ -589,6 +589,10 @@ class App(Tk):
         self.autoTimeVar.set(self.settingValues.getAppSettingValue('autotimeperiod'))
         self.autoGridToJS8Call.set(self.settingValues.getAppSettingValue('autoonatstart'))
         
+        if self.gpsl!=None:
+            self.gpsl.setPrecision(int(self.settingValues.getAppSettingValue('precision')))
+            self.gpsl.setShowDebug(self.showoutput)
+            
         if self.gpsOptionBeforeRefresh!=self.gpsOption:
             if self.gpsl!=None:
                 print('Shutting down GPS Listener')

@@ -45,7 +45,11 @@ class GpsListener(threading.Thread):
        
         except:
             self.setStatus("Error initilizing GPS, check com port and restart this app.")
-  
+    
+    def setPrecision(self, precision):
+        self.locator_precision = precision
+    def setShowDebug(self, show):
+        self.showdebug=show
     def setStatus(self, statusString):
         self.status=statusString  
     def getStatus(self):

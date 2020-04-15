@@ -73,7 +73,8 @@ class GPSListener(threading.Thread):
         self.status=statusString  
     def getStatus(self):
         return self.status
-
+    def setPrecision(self, precision):
+        self.location_precision = precision
     def getAltitude(self):
         return self.altitude
     def getCurrentLat(self):
@@ -92,6 +93,8 @@ class GPSListener(threading.Thread):
         return self.mhGrid
     def setReadGPS(self, read):
         self.readGPS = read
+    def setShowDebug(self, show):
+        self.showoutput=show
         
     def run(self):
         showoutput=self.showOutput
