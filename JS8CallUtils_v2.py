@@ -68,7 +68,16 @@ class SettingsPage(Frame):
     
     def addY(self, y):
         return y+0.065
-        
+    
+    def comchange(self,event):
+        if self.gpstypecombo.get()=="com port":
+            self.comportEntry.configure(state='normal')
+            self.comportspeedEntry.configure(state='normal')
+        else:
+            self.comportEntry.configure(state='disabled')
+            self.comportspeedEntry.configure(state='disabled')
+            
+         
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
        
@@ -103,6 +112,8 @@ class SettingsPage(Frame):
         gpstypecomboLabel.place(relx=0.05, rely=y,relwidth=0.3,relheight=relh)
         type=0
         self.gpstypecombo = Combobox(self, state='readonly')
+        self.gpstypecombo.bind('<<ComboboxSelected>>', self.comchange)    
+       
         #self.gpstypecombo.bind('<<ComboboxSelected>>', self.comboChange)    
         self.gpstypecombo['values']= ("None", "com port", "GPSD")
         if controller.gpsOption=="None":
@@ -114,6 +125,9 @@ class SettingsPage(Frame):
         self.gpstypecombo.current(type) #set the selected item
         self.gpstypecombo.place(relx=0.5, rely=y, relwidth=0.48, relheight=relh)
         ###################################################
+        
+
+        
         y=self.addY(y)
 
         comportLabel = Label(self, font=fontsize, text="GPS COM Port")
@@ -132,6 +146,13 @@ class SettingsPage(Frame):
         self.comportspeedEntry = Entry(self, font=fontsize, textvariable=controller.gpsComPortSpeedVar, justify='center')
         self.comportspeedEntry.place(relx=0.5,rely=y, relwidth=0.48,relheight=relh)
         
+        if self.gpstypecombo.get()=="com port":
+            self.comportEntry.configure(state='normal')
+            self.comportspeedEntry.configure(state='normal')
+        else:
+            self.comportEntry.configure(state='disabled')
+            self.comportspeedEntry.configure(state='disabled')
+         
         ##############################################
         y = self.addY(y)
         
@@ -225,9 +246,9 @@ class GPSPage(Frame):
         latlonEntry = Entry(self, font=40, textvariable=controller.latlonvar, justify='center')
         latlonEntry.place(rely=0.3, relwidth=0.48,relheight=0.10)
         
-        self.latlonButton = Button(self, text="Lat Lon to Msg Text", command=lambda:controller.setMapLink, bg="white", font=30)
-        self.latlonButton.place(relx=0.52,rely=0.3,relwidth=0.48,relheight=0.10)
-        self.latlonButton.configure(state='disabled')
+        #self.latlonButton = Button(self, text="Lat Lon to Msg Text", command=lambda:controller.setMapLink, bg="white", font=30)
+        #self.latlonButton.place(relx=0.52,rely=0.3,relwidth=0.48,relheight=0.10)
+        #self.latlonButton.configure(state='disabled')
          
         self.setJS8CallGridButton = Button(self, text="Send Grid to JS8Call", command=lambda: controller.sendGridToJS8Call(gridrefEntry.get()), bg="white", font=40)
         self.setJS8CallGridButton.place(relx=0.02, rely=0.42,relwidth=0.45,relheight=0.2)
@@ -243,12 +264,12 @@ class GPSPage(Frame):
         if mh!= "No Fix" and mh!='JJ00aa00':
                 self.setJS8CallGridButton.configure(state='normal')
                 self.sendJS8CallALLCALLButton.configure(state='normal')
-                self.latlonButton.configure(state='normal')
+                #self.latlonButton.configure(state='normal')
                 #self.ngrStr.set(ngr)
         else:
                 self.setJS8CallGridButton.configure(state='disabled')
                 self.sendJS8CallALLCALLButton.configure(state='disabled')
-                self.latlonButton.configure(state='normal')
+                #self.latlonButton.configure(state='normal')
 #                self.ngrStr.set('No Fix')
 #                self.var1.set('No Fix')
 #                self.latlonvar.set('No Fix')
@@ -322,7 +343,9 @@ class MessagePage(Frame):
             self.callLbl.config(text='Enter Email Address to send to')
         elif mode=="SMS":
             self.callLbl.config(text='Enter cell phone number')
- 
+    def addy(self,y):
+        y=y+0.08
+        return y
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
         
@@ -339,43 +362,53 @@ class MessagePage(Frame):
         self.aprstitleLabel.place(relx=0.05, relwidth=0.9,relheight=0.1)
        
         self.aprstypelabel = Label(self, text="APRS Message Type", justify="left")
-        self.aprstypelabel.place(relx=0.01, rely=0.14,relwidth=0.3, relheight=0.1)
- 
+        self.aprstypelabel.place(relx=0.01, rely=0.14,relwidth=0.3, relheight=0.05)
+        y=0.14
         self.combo = Combobox(self, state='readonly')
         self.combo.bind('<<ComboboxSelected>>', self.comboChange)    
         self.combo['values']= ("Email", "SMS", "APRS")
         self.combo.current(0) #set the selected item
-        self.combo.place(relx=0.42, rely=0.14, relwidth=0.3, relheight=0.1)
- 
+        self.combo.place(relx=0.42, rely=y, relwidth=0.3, relheight=0.05)
+        y=self.addy(y)
         self.lbl1 = Label(self, text="JS8Call Mode", justify="left")
-        self.lbl1.place(relx=0.01, rely=0.27)
+        self.lbl1.place(relx=0.01, rely=y)
  
         self.combo2 = Combobox(self, state='readonly')
         self.combo2['values']= ("Normal")
         self.combo2.current(0) #set the selected item
-        self.combo2.place(relx=0.42, rely=0.27, relwidth=0.3)
+        self.combo2.place(relx=0.42, rely=y, relwidth=0.3)
  
+        y=self.addy(y)
         self.callLbl = Label(self, text="Enter Email Address", justify="left")
-        self.callLbl.place(relx=0.01, rely=0.41)
+        self.callLbl.place(relx=0.01, rely=y)
  
         self.tocall = Entry(self,width=37)
-        self.tocall.place(relx=0.42, rely=0.41, relwidth=0.5)
+        self.tocall.place(relx=0.42, rely=y, relwidth=0.5)
  
+        y=self.addy(y)
         self.msgLabel = Label(self, text="Message Text", justify="left")
-        self.msgLabel.place(relx=0.01, rely=0.56)
+        self.msgLabel.place(relx=0.01, rely=y)
  
         self.st = ScrolledText(self, height=5)
-        self.st.place(relx=0.35, rely=0.56, relwidth=0.6)
-
+        self.st.place(relx=0.35, rely=y, relwidth=0.6)
+ 
+        y=y+0.05
         self.btn = Button(self, text="Set JS8Call Text", command=self.setAPRSMessage, width=20)
-        self.btn.place(relx=0.01, rely=0.69, relwidth=0.3)
-
+        self.btn.place(relx=0.01, rely=y, relwidth=0.3)
+        
+        y=y+0.05 #self.addy(y)
         self.btn2 = Button(self, text="TX With JS8Call", command=self.txAPRSMessage, width=20)
-        self.btn2.place(relx=0.01, rely=0.83, relwidth=0.3)
+        self.btn2.place(relx=0.01, rely=y, relwidth=0.3)
+ 
+        y=self.addy(y)
+        y=self.addy(y)
         
         self.note1label = Label(self, text="Click Set JS8Call text to set the message text in JS8Call", justify="center", wraplength=300)
-        self.note1label = Label(self, text="Click TX with JS8Call to set the message text in JS8Call and start transmitting", justify="center", wraplength=300)
-
+        self.note1label.place(relx=0.1, rely=y, relwidth=0.8)
+        y=self.addy(y)
+        self.note2label = Label(self, text="Click TX with JS8Call to set the message text in JS8Call and start transmitting", justify="center", wraplength=300)
+        self.note2label.place(relx=0.1, rely=y, relwidth=0.8)
+       
 class App(Tk):
     def showMessage(self, messagetype, messageString):
         if messagetype==MSG_ERROR:
