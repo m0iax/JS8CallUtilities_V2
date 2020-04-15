@@ -463,7 +463,9 @@ class App(Tk):
         
             self.var1.set(gpsText)
             self.latlonvar.set(latlon)        
-        
+            
+            return gpsText
+
 #            if gpsText!= "No Fix" and gpsText!='JJ00aa00':
 #                self.setJS8CallGridButton.configure(state='normal')
 #                self.sendJS8CallALLCALLButton.configure(state='normal')
@@ -480,7 +482,6 @@ class App(Tk):
             #if gpsText=='JJ00aa00':
                 #self.ngrStr.set('No Fix')
     
-#           return gpsText
    
     def show_frame(self, context):
         frame = self.frames[context]
@@ -526,16 +527,18 @@ class App(Tk):
             self.timerStr.set(t)
             
             if self.timer<=0:
+                print('Got to Zero')
                 gridstr = self.getGrid()
-                
+                print('grd ', gridstr)
                 combotext=self.autocombo.get()
-
+                print("combo text ", combotext)
                 if gridstr!=None and gridstr!='':
                     if combotext=="Auto update JS8Call Grid":
                         self.sendGridToJS8Call(gridstr)
                     if combotext=="Auto TX Grid to APRSIS":    
                         self.sendGridToALLCALL(gridstr)
-                        
+                else:
+                    print('No grid. enabld gps and wait for fix')        
                 self.initTimer()
         self.after(1000, self.update_timer)
     #def update_status_timer(self):
@@ -589,6 +592,15 @@ class App(Tk):
         self.autoTimeVar.set(self.settingValues.getAppSettingValue('autotimeperiod'))
         self.autoGridToJS8Call.set(self.settingValues.getAppSettingValue('autoonatstart'))
         
+        self.autoGridCheck.configure(text="Enable Auto update every "+str(self.timeinmins)+" mins.")
+        
+        if self.gpsOption=='None':
+            self.autoGridCheck.configure(state='disabled')
+            self.autoGridToJS8Call.set(0)
+        else:
+            self.autoGridCheck.configure(state='normal')
+            
+            
         if self.gpsl!=None:
             self.gpsl.setPrecision(int(self.settingValues.getAppSettingValue('precision')))
             self.gpsl.setShowDebug(self.showoutput)
@@ -721,6 +733,12 @@ class App(Tk):
         self.autoGridCheck = Checkbutton(bottomFrame, text="Enable Auto update every "+str(self.timeinmins)+" mins.", variable=self.autoGridToJS8Call, command=self.cb)
         #self.autoGridCheck.place(relx=0.05,rely=0.71, relwidth=0.9,relheight=0.1)
         self.autoGridCheck.grid(row=1, column=0)
+        
+        if self.gpsOption=='None':
+            self.autoGridCheck.configure(state='disabled')
+            self.autoGridToJS8Call.set(0)
+        else:
+            self.autoGridCheck.configure(state='normal')
         
         self.timer=60 #Set timer to 60 for the first tx GPS should have a lock in that time
         self.timerStr = StringVar()
