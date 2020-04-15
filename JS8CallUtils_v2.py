@@ -532,7 +532,7 @@ class App(Tk):
                 print('grd ', gridstr)
                 combotext=self.autocombo.get()
                 print("combo text ", combotext)
-                if gridstr!=None and gridstr!='':
+                if gridstr!=None and gridstr!='' and gridstr!="No Fix":
                     if combotext=="Auto update JS8Call Grid":
                         self.sendGridToJS8Call(gridstr)
                     if combotext=="Auto TX Grid to APRSIS":    
