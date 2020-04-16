@@ -43,6 +43,8 @@ class SettingsPage(Frame):
         autoOption = 0
         if val=='Auto TX Grid to APRSIS':
             autoOption=1
+        if val=='Auto TX Grid to APRSIS and Update JS8Call Grid':
+            autoOption=2
       
 #      self.autodefaultcombo['values']= ("Auto update JS8Call Grid", "Auto TX Grid to APRSIS")
         print('Debug '+self.showdebugcombo.get())
@@ -193,7 +195,7 @@ class SettingsPage(Frame):
         self.autodefaultcombo = Combobox(self, state='readonly')
         #self.gpstypecombo.bind('<<ComboboxSelected>>', self.comboChange)    
        # self.autodefaultcombo['values']= ("Auto Set Grid", "Auto TX Grid")
-        self.autodefaultcombo['values']= ("Auto update JS8Call Grid", "Auto TX Grid to APRSIS")
+        self.autodefaultcombo['values']= ("Auto update JS8Call Grid", "Auto TX Grid to APRSIS", "Auto TX Grid to APRSIS and Update JS8Call Grid")
  
         self.autodefaultcombo.current(controller.autooption) #set the selected item
         self.autodefaultcombo.place(relx=0.5, rely=y, relwidth=0.48, relheight=relh)
@@ -537,6 +539,10 @@ class App(Tk):
                         self.sendGridToJS8Call(gridstr)
                     if combotext=="Auto TX Grid to APRSIS":    
                         self.sendGridToALLCALL(gridstr)
+                    if combotext=="Auto TX Grid to APRSIS and Update JS8Call Grid":    
+                        self.sendGridToJS8Call(gridstr)
+                        self.sendGridToALLCALL(gridstr)
+
                 else:
                     print('No grid. enabld gps and wait for fix')        
                 self.initTimer()
@@ -573,6 +579,8 @@ class App(Tk):
         self.autoatstart = int(self.settingValues.getAppSettingValue('autoonatstart'))
         self.autooption = int(self.settingValues.getAppSettingValue('autoselectedoption'))
 
+        self.autocombo.current(self.autooption) #set the selected item
+        
         self.MAX_TIMER=self.timeinmins*60    
     
         self.serverPortVar = StringVar()
@@ -645,6 +653,8 @@ class App(Tk):
         self.autoatstart = int(self.settingValues.getAppSettingValue('autoonatstart'))
         self.autooption = int(self.settingValues.getAppSettingValue('autoselectedoption'))
 
+        #self.autocombo.set(self.autooption)
+        
         self.MAX_TIMER=self.timeinmins*60    
     
         self.serverPortVar = StringVar()
@@ -720,10 +730,10 @@ class App(Tk):
         bottomFrame=Frame(self)
         bottomFrame.pack()
                 
-        self.autocombo = Combobox(bottomFrame, state='readonly',width=25)
+        self.autocombo = Combobox(bottomFrame, state='readonly',width=45)
         self.autocombo.state='disabled'
         self.autocombo.bind('<<ComboboxSelected>>', self.autocomboChange)    
-        self.autocombo['values']= ("Auto update JS8Call Grid", "Auto TX Grid to APRSIS")
+        self.autocombo['values']= ("Auto update JS8Call Grid", "Auto TX Grid to APRSIS", "Auto TX Grid to APRSIS and Update JS8Call Grid")
  
         self.autocombo.current(self.autooption) #set the selected item
         #self.autocombo.place(relx=0.05,rely=0.63, relwidth=0.9,relheight=0.1)
