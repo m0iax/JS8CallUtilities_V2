@@ -34,11 +34,11 @@ on unix now enter chmod +x js8callutilsGPSD.py
 
 you should now be ready to run the app
 
-Linux:
-./JS8CallUtils_v2.py
+Linux:<br>
+<b>./JS8CallUtils_v2.py</b>
 
-Windows
-py JS8CallUtils_v2.py
+Windows<br>
+<b>py JS8CallUtils_v2.py</b>
 
 When running click on settings and select the GPS Interface type. On Windows select coim port, on Raspberry Pi select GPSD and on Linux
 select either GPSD or com port. Select 'None' if you do not have a GPS attached.
