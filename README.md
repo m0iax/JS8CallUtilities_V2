@@ -12,47 +12,47 @@ It also allows you to send messages into the ARRS system, APRS, Email or SMS mes
 To use, download the files, ensure you have python version 3 installed and install the follwoing dependencies enter the following on the command line:
 
 Clone or download and unzip the code. NOw run a command prompt and cd to the downloaded directory.
-
-<b>cd JS8CallUtilities_V2</b>
-
+<br>
+<b>cd JS8CallUtilities_V2</b><br>
+<br>
 Before running for the first time install the required python modules:
+<br>
+<b>LINUX (including Raspberry Pi)<br>
+pip3 install maidenhead<br>
+pip3 install serial<br>
+pip3 install configparser<br>
+pip3 install gps<br>
+<br></b>
+<b>Windows<br>
+py -m pip install maidenhead<br>
+py -m pip install serial<br>
+py -m pip install configparser<br>
+py -m pip install gps<br></b>
 
-LINUX (including Raspberry Pi)
-pip3 install maidenhead
-pip3 install serial
-pip3 install configparser
-pip3 install gps
-
-Windows
-py -m pip install maidenhead
-py -m pip install serial
-py -m pip install configparser
-py -m pip install gps
-
-
-on unix now enter chmod +x js8callutilsGPSD.py
+<br>
+on unix now enter<br><b> chmod +x js8callutilsGPSD.py</b><br>
 
 you should now be ready to run the app
-
+<br>
 Linux:<br>
 <b>./JS8CallUtils_v2.py</b>
-
+<br>
 Windows<br>
 <b>py JS8CallUtils_v2.py</b>
 
 When running click on settings and select the GPS Interface type. On Windows select coim port, on Raspberry Pi select GPSD and on Linux
 select either GPSD or com port. Select 'None' if you do not have a GPS attached.
-
+<br>
 Enter the correct name for the com port that your GPS is using. on windows this will be something like 'COM4' (the number after COM on your system 
 will probably be different)
 on Linux it will be something like /dev/ttyAMA0 for example.
-
+<br>
 Set the other options you want (the default ones work nicely) and click Save. 
 If you have configured the GPS correctly you should now be able to use the GPS functions on the GPS page (note it may take a few seconds on 
 some systems to start the GPS and get a fix)
-
+<br>
 The APRS functions should be self explanatory. But if you need help please let me know.
-
+<br>
 You can find my social media contact info here: http:m0iax.com/findme
 
 73!
