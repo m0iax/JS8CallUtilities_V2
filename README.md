@@ -4,7 +4,7 @@ This project is designed for use with JS8Call by Jordan KN4CRD - http://js8call.
 
 GPS Functions in this version will work on a Windows, Linux (Including Raspberry Pi) and Mac OS computer.
 
-If you have a GPS connected to your computer it will allow you to send your maidenhead grid to JS8Call to set its locator and/or to transmit to @APRSIS
+If you have a GPS connected to your computer it will allow you to send your maidenhead grid to JS8Call to set its locator and/or to transmit to @APRSIS<br>
 For raspberry pi please ensure you have installed and configured the GPSD service, searial connection does not currently work on the Pi.. I will investigate and fix that in future releases.
 
 It also allows you to send messages into the ARRS system, APRS, Email or SMS message types.
