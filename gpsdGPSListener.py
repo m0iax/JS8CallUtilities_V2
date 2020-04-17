@@ -127,13 +127,13 @@ class GpsListener(threading.Thread):
             self.join() # wait for the thread to finish what it's doing
             print ("Done.\nExiting.")
 
-
-if __name__ == "__main__":
-    try:
-        gpsl = GpsListener()
-        gpsl.start()    
-        #gpsl.setReadGPS(False)
-    except (KeyboardInterrupt, SystemExit):
-        gpsl.setReadGPS(False)
-        print("Done.\nClosing GPS Listener.")
+#no longer support running standalone. may re-implement later
+#if __name__ == "__main__":
+#    try:
+#        gpsl = GpsListener()
+#        gpsl.start()    
+#        #gpsl.setReadGPS(False)
+#    except (KeyboardInterrupt, SystemExit):
+#        gpsl.setReadGPS(False)
+#        print("Done.\nClosing GPS Listener.")
 
