@@ -11,9 +11,11 @@ It also allows you to send messages into the ARRS system, APRS, Email or SMS mes
 
 To use, download the files, ensure you have python version 3 installed and install the follwoing dependencies enter the following on the command line:
 
+<b>Note that you require Python to be installed version 3.7 and above. Other versions may not work correctly for all the functions</b>
+<br>
 Clone or download and unzip the code. NOw run a command prompt and cd to the downloaded directory.
 <br>
-<b>cd JS8CallUtilities_V2</b><br>
+<b>cd JS8CallUtilities _V2</b><br>
 <br>
 Before running for the first time install the required python modules:
 <br>
