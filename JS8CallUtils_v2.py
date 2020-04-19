@@ -19,6 +19,11 @@ MSG_ERROR='ERROR'
 MSG_INFO='INFO'
 MSG_WARN='WARN'
 
+NAV_BUTTON_WIDTH=14
+NAV_BUTTON_FONT = ('TkDefaultFont', 12)
+
+SETTINGS_LABEL_FONT_SIZE=12
+
 def callback(url):
     webbrowser.open_new(url)
 
@@ -85,14 +90,19 @@ class SettingsPage(Frame):
        
         self.controller = controller
         relh = 0.05
-        fontsize=30
+        fontsize=16
+
+        labelfont = ('TkDefaultFont', 12)
+        titlefont = ('TkDefaultFont', 18)
         
         y=0.14
-        titleLabel = Label(self, font=12, text="Settings")
-        titleLabel.place(relx=0.05, relwidth=0.9,relheight=0.10)
+        titleLabel = Label(self, text="Settings")
+        titleLabel.place(relx=0.05, relwidth=0.9,relheight=0.12)
+        titleLabel.config(font=titlefont)           
         
-        serverLabel = Label(self, font=40, text="JS8Call Server IP")
-        serverLabel.place(relx=0.05, rely=y,relwidth=0.3,relheight=0.08)
+        serverLabel = Label(self, text="JS8Call Server IP", anchor="e")
+        serverLabel.place(relx=0.05, rely=y,relwidth=0.4)
+        serverLabel.config(font=labelfont)           
         
         self.serverEntry = Entry(self, font=40, textvariable=controller.serverVar, justify='center')
         self.serverEntry.place(relx=0.5,rely=y, relwidth=0.48,relheight=relh)
@@ -101,8 +111,9 @@ class SettingsPage(Frame):
         y=self.addY(y)
         
         ##############################################
-        serverPortLabel = Label(self, font=fontsize, text="JS8Call UDP Port")
-        serverPortLabel.place(relx=0.05, rely=y,relwidth=0.3,relheight=relh)
+        serverPortLabel = Label(self, font=fontsize, text="JS8Call UDP Port", anchor="e")
+        serverPortLabel.place(relx=0.05, rely=y,relwidth=0.4,relheight=relh)
+        serverPortLabel.config(font=labelfont)           
         
         self.serverPortEntry = Entry(self, font=fontsize, textvariable=controller.serverPortVar, justify='center')
         self.serverPortEntry.place(relx=0.5,rely=y, relwidth=0.48,relheight=relh)
@@ -110,13 +121,14 @@ class SettingsPage(Frame):
         #############################################
         y=self.addY(y)
         
-        gpstypecomboLabel = Label(self, font=fontsize, text="GPS Interface")
-        gpstypecomboLabel.place(relx=0.05, rely=y,relwidth=0.3,relheight=relh)
+        gpstypecomboLabel = Label(self, font=fontsize, text="GPS Interface", anchor="e")
+        gpstypecomboLabel.place(relx=0.05, rely=y,relwidth=0.4,relheight=relh)
+        gpstypecomboLabel.config(font=labelfont)           
+        
         type=0
         self.gpstypecombo = Combobox(self, state='readonly')
         self.gpstypecombo.bind('<<ComboboxSelected>>', self.comchange)    
        
-        #self.gpstypecombo.bind('<<ComboboxSelected>>', self.comboChange)    
         self.gpstypecombo['values']= ("None", "com port", "GPSD")
         if controller.gpsOption=="None":
             type = 0
@@ -132,8 +144,9 @@ class SettingsPage(Frame):
         
         y=self.addY(y)
 
-        comportLabel = Label(self, font=fontsize, text="GPS COM Port")
-        comportLabel.place(relx=0.05, rely=y,relwidth=0.3,relheight=relh)
+        comportLabel = Label(self, font=fontsize, text="GPS COM Port", anchor="e")
+        comportLabel.place(relx=0.05, rely=y,relwidth=0.4,relheight=relh)
+        comportLabel.config(font=labelfont)           
         
         self.comportEntry = Entry(self, font=fontsize, textvariable=controller.gpsComPortVar, justify='center')
         self.comportEntry.place(relx=0.5,rely=y, relwidth=0.48,relheight=relh)
@@ -142,8 +155,9 @@ class SettingsPage(Frame):
         y=self.addY(y)
         
         #############################################
-        comportspeedLabel = Label(self, font=fontsize-10, text="GPS COM Port Speed")
+        comportspeedLabel = Label(self, text="GPS COM Port Speed", anchor="e")
         comportspeedLabel.place(relx=0.05, rely=y,relwidth=0.4,relheight=relh)
+        comportspeedLabel.config(font=labelfont)           
         
         self.comportspeedEntry = Entry(self, font=fontsize, textvariable=controller.gpsComPortSpeedVar, justify='center')
         self.comportspeedEntry.place(relx=0.5,rely=y, relwidth=0.48,relheight=relh)
@@ -158,8 +172,9 @@ class SettingsPage(Frame):
         ##############################################
         y = self.addY(y)
         
-        maidPrecisionLabel = Label(self, font=fontsize, text="GPS Precision")
-        maidPrecisionLabel.place(relx=0.05, rely=y,relwidth=0.3,relheight=relh)
+        maidPrecisionLabel = Label(self, font=fontsize, text="GPS Precision", anchor="e")
+        maidPrecisionLabel.place(relx=0.05, rely=y,relwidth=0.4,relheight=relh)
+        maidPrecisionLabel.config(font=labelfont)           
         
         self.maidPrecisionEntry = Entry(self, font=fontsize, textvariable=controller.maidPreceision, justify='center')
         self.maidPrecisionEntry.place(relx=0.5,rely=y, relwidth=0.48,relheight=relh)
@@ -167,8 +182,9 @@ class SettingsPage(Frame):
         ###############################################
         y=self.addY(y)
 
-        autotimeLabel = Label(self, font=fontsize, text="Auto Time (mins)")
-        autotimeLabel.place(relx=0.05, rely=y,relwidth=0.3,relheight=relh)
+        autotimeLabel = Label(self, text="Auto Time (mins)", anchor="e")
+        autotimeLabel.place(relx=0.05, rely=y,relwidth=0.4,relheight=relh)
+        autotimeLabel.config(font=labelfont)           
         
         self.autotimeEntry = Entry(self, font=fontsize, textvariable=controller.autoTimeVar, justify='center')
         self.autotimeEntry.place(relx=0.5,rely=y, relwidth=0.48,relheight=relh)
@@ -176,8 +192,9 @@ class SettingsPage(Frame):
         
         y=self.addY(y)
         
-        autoonstartLabel = Label(self, font=fontsize, text="Auto on Startup")
-        autoonstartLabel.place(relx=0.05, rely=y,relwidth=0.3,relheight=relh)
+        autoonstartLabel = Label(self, text="Auto on Startup", anchor="e")
+        autoonstartLabel.place(relx=0.05, rely=y,relwidth=0.4,relheight=relh)
+        autoonstartLabel.config(font=labelfont)           
         
         
         self.autoonstartcombo = Combobox(self, state='readonly')
@@ -189,8 +206,9 @@ class SettingsPage(Frame):
 
         y=self.addY(y)
         
-        autodefaultLabel = Label(self, font=fontsize, text="Default Auto Action")
-        autodefaultLabel.place(relx=0.05, rely=y,relwidth=0.3,relheight=relh)
+        autodefaultLabel = Label(self, text="Default Auto Action", anchor="e")
+        autodefaultLabel.place(relx=0.05, rely=y,relwidth=0.4,relheight=relh)
+        autodefaultLabel.config(font=labelfont)           
         
         self.autodefaultcombo = Combobox(self, state='readonly')
         #self.gpstypecombo.bind('<<ComboboxSelected>>', self.comboChange)    
@@ -203,8 +221,9 @@ class SettingsPage(Frame):
  
         y=self.addY(y)
         
-        showdebugLabel = Label(self, font=fontsize, text="Show debug output")
-        showdebugLabel.place(relx=0.05, rely=y,relwidth=0.3,relheight=relh)
+        showdebugLabel = Label(self, text="Show debug output", anchor="e")
+        showdebugLabel.place(relx=0.05, rely=y,relwidth=0.4,relheight=relh)
+        showdebugLabel.config(font=labelfont)           
         
         self.showdebugcombo = Combobox(self, state='readonly')
         #self.gpstypecombo.bind('<<ComboboxSelected>>', self.comboChange)    
@@ -221,7 +240,8 @@ class SettingsPage(Frame):
         aboutMeLabel = Label(self,text="http://m0iax.com/findme", font=30)
         aboutMeLabel.place(relx=0.05, rely=0.9,relwidth=0.9,relheight=0.10)
         aboutMeLabel.bind("<Button-1>", lambda e: callback("http://m0iax.com/findme"))
-
+        aboutMeLabel.config(font=labelfont)           
+        
 class GPSPage(Frame):
 
     def __init__(self, parent, controller):
@@ -489,11 +509,12 @@ class App(Tk):
         frame = self.frames[context]
         frame.tkraise()
     def nav_buttons(self, frame, controller):
-        gps_page=Button(frame, text="GPS", command=lambda:controller.show_frame(GPSPage), bg="white", font=30, width=15)
+        
+        gps_page=Button(frame, text="GPS", command=lambda:controller.show_frame(GPSPage), bg="white", font=NAV_BUTTON_FONT, width=NAV_BUTTON_WIDTH)
         gps_page.grid(row=2, column=0)
-        aprs_page=Button(frame, text="APRS Message", command=lambda:controller.show_frame(MessagePage), bg="white", font=30, width=15)
+        aprs_page=Button(frame, text="APRS Message", command=lambda:controller.show_frame(MessagePage), bg="white", font=NAV_BUTTON_FONT, width=NAV_BUTTON_WIDTH)
         aprs_page.grid(row=2, column=1)
-        settings_page=Button(frame, text="Settings", command=lambda:controller.show_frame(SettingsPage), bg="white", font=30, width=15)
+        settings_page=Button(frame, text="Settings", command=lambda:controller.show_frame(SettingsPage), bg="white", font=NAV_BUTTON_FONT, width=NAV_BUTTON_WIDTH)
         settings_page.grid(row=2, column=2)
     
     def sendGridToALLCALL(self,gridText):
