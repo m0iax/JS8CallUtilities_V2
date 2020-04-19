@@ -111,7 +111,7 @@ class SettingsPage(Frame):
         y=self.addY(y)
         
         ##############################################
-        serverPortLabel = Label(self, font=fontsize, text="JS8Call UDP Port", anchor="e")
+        serverPortLabel = Label(self, text="JS8Call UDP Port", anchor="e")
         serverPortLabel.place(relx=0.05, rely=y,relwidth=0.4,relheight=relh)
         serverPortLabel.config(font=labelfont)           
         
@@ -121,7 +121,7 @@ class SettingsPage(Frame):
         #############################################
         y=self.addY(y)
         
-        gpstypecomboLabel = Label(self, font=fontsize, text="GPS Interface", anchor="e")
+        gpstypecomboLabel = Label(self, text="GPS Interface", anchor="e")
         gpstypecomboLabel.place(relx=0.05, rely=y,relwidth=0.4,relheight=relh)
         gpstypecomboLabel.config(font=labelfont)           
         
@@ -144,7 +144,7 @@ class SettingsPage(Frame):
         
         y=self.addY(y)
 
-        comportLabel = Label(self, font=fontsize, text="GPS COM Port", anchor="e")
+        comportLabel = Label(self, text="GPS COM Port", anchor="e")
         comportLabel.place(relx=0.05, rely=y,relwidth=0.4,relheight=relh)
         comportLabel.config(font=labelfont)           
         
