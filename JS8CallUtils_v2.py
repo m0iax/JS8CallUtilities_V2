@@ -510,12 +510,30 @@ class App(Tk):
         frame.tkraise()
     def nav_buttons(self, frame, controller):
         
-        gps_page=Button(frame, text="GPS", command=lambda:controller.show_frame(GPSPage), bg="white", font=NAV_BUTTON_FONT, width=NAV_BUTTON_WIDTH)
-        gps_page.grid(row=2, column=0)
-        aprs_page=Button(frame, text="APRS Message", command=lambda:controller.show_frame(MessagePage), bg="white", font=NAV_BUTTON_FONT, width=NAV_BUTTON_WIDTH)
-        aprs_page.grid(row=2, column=1)
-        settings_page=Button(frame, text="Settings", command=lambda:controller.show_frame(SettingsPage), bg="white", font=NAV_BUTTON_FONT, width=NAV_BUTTON_WIDTH)
-        settings_page.grid(row=2, column=2)
+#        gps_page=Button(frame, text="GPS", command=lambda:controller.show_frame(GPSPage), bg="white", font=NAV_BUTTON_FONT, width=NAV_BUTTON_WIDTH)
+#        gps_page.grid(row=2, column=0)
+#        aprs_page=Button(frame, text="APRS Message", command=lambda:controller.show_frame(MessagePage), bg="white", font=NAV_BUTTON_FONT, width=NAV_BUTTON_WIDTH)
+#        aprs_page.grid(row=2, column=1)
+#        settings_page=Button(frame, text="Settings", command=lambda:controller.show_frame(SettingsPage), bg="white", font=NAV_BUTTON_FONT, width=NAV_BUTTON_WIDTH)
+#        settings_page.grid(row=2, column=2)
+
+        rh=0.1
+        rw=0.28
+        rx=0.01
+       # ry=0.02
+        
+        gps_page=Button(frame, text="GPS", command=lambda:controller.show_frame(GPSPage), bg="white")
+        #gps_page.grid(row=2, column=0)
+        #gps_page.place(relheight=rh, relwidth=rw, relx=rx)
+        gps_page.place(relx=0.05,relwidth=0.4,relheight=1)
+        gps_page.grid(row=2, column=0, sticky=W+E+N+S, padx=5, pady=5)
+
+        aprs_page=Button(frame, text="APRS Message", command=lambda:controller.show_frame(MessagePage), bg="white")
+ #       aprs_page.grid(row=2, column=1)
+        aprs_page.grid(row=2, column=1, sticky=W+E+N+S, padx=5, pady=5)
+        settings_page=Button(frame, text="Settings", command=lambda:controller.show_frame(SettingsPage), bg="white")
+#        settings_page.grid(row=2, column=2)
+        settings_page.grid(row=2, column=2, sticky=W+E+N+S, padx=5, pady=5)
     
     def sendGridToALLCALL(self,gridText):
         self.api.sendGridToALLCALL(gridText, self.gpsl.getStatus())
