@@ -523,16 +523,11 @@ class App(Tk):
        # ry=0.02
         
         gps_page=Button(frame, text="GPS", command=lambda:controller.show_frame(GPSPage), bg="white")
-        #gps_page.grid(row=2, column=0)
-        #gps_page.place(relheight=rh, relwidth=rw, relx=rx)
-        gps_page.place(relx=0.05,relwidth=0.4,relheight=1)
         gps_page.grid(row=2, column=0, sticky=W+E+N+S, padx=5, pady=5)
 
         aprs_page=Button(frame, text="APRS Message", command=lambda:controller.show_frame(MessagePage), bg="white")
- #       aprs_page.grid(row=2, column=1)
         aprs_page.grid(row=2, column=1, sticky=W+E+N+S, padx=5, pady=5)
         settings_page=Button(frame, text="Settings", command=lambda:controller.show_frame(SettingsPage), bg="white")
-#        settings_page.grid(row=2, column=2)
         settings_page.grid(row=2, column=2, sticky=W+E+N+S, padx=5, pady=5)
     
     def sendGridToALLCALL(self,gridText):
@@ -776,13 +771,13 @@ class App(Tk):
  
         self.autocombo.current(self.autooption) #set the selected item
         #self.autocombo.place(relx=0.05,rely=0.63, relwidth=0.9,relheight=0.1)
-        self.autocombo.grid(row=0, column=0)
+        self.autocombo.grid(row=0, column=0,sticky=W+E+N+S)
     
         self.autoGridToJS8Call = IntVar(value=self.autoatstart)
         self.autoGridCheck = Checkbutton(bottomFrame, text="Enable Auto update every "+str(self.timeinmins)+" mins.", variable=self.autoGridToJS8Call, command=self.cb)
         #self.autoGridCheck.place(relx=0.05,rely=0.71, relwidth=0.9,relheight=0.1)
-        self.autoGridCheck.grid(row=1, column=0)
-        
+        self.autoGridCheck.grid(row=1, column=0, sticky=W+E+N+S, padx=5, pady=5)
+
         if self.gpsOption=='None':
             self.autoGridCheck.configure(state='disabled')
             self.autoGridToJS8Call.set(0)
@@ -795,7 +790,7 @@ class App(Tk):
         self.timerStr.set("Timer Not Active")
         self.timerlabel = Label(bottomFrame, textvariable=self.timerStr )
         #self.timerlabel.place(relx=0.05,rely=0.81, relwidth=0.9,relheight=0.1)
-        self.timerlabel.grid(row=2, column=0)
+        self.timerlabel.grid(row=2, column=0,sticky=W+E+N+S)
     
         buttonFrame=Frame(self)
         buttonFrame.pack()
