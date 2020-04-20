@@ -256,27 +256,27 @@ class GPSPage(Frame):
         self.var2 = StringVar()
         self.latlonvar = StringVar()
         
-        titleLabel = Label(self, font=12, text="Maidenhead Locator")
+        titleLabel = Label(self, text="Maidenhead Locator")
         titleLabel.place(relx=0.05, relwidth=0.9,relheight=0.10)
         
-        gridrefEntry = Entry(self, font=40, textvariable=controller.var1, justify='center')
+        gridrefEntry = Entry(self, textvariable=controller.var1, justify='center')
         gridrefEntry.place(rely=0.14, relwidth=0.48,relheight=0.14)
         
-        getGridButton = Button(self, text="Get Grid from GPS", command=self.getGridRef, bg="white", font=30)
+        getGridButton = Button(self, text="Get Grid from GPS", command=self.getGridRef, bg="white")
         getGridButton.place(relx=0.52,rely=0.14,relwidth=0.48,relheight=0.14)
         
-        latlonEntry = Entry(self, font=40, textvariable=controller.latlonvar, justify='center')
+        latlonEntry = Entry(self, textvariable=controller.latlonvar, justify='center')
         latlonEntry.place(rely=0.3, relwidth=0.48,relheight=0.10)
         
         #self.latlonButton = Button(self, text="Lat Lon to Msg Text", command=lambda:controller.setMapLink, bg="white", font=30)
         #self.latlonButton.place(relx=0.52,rely=0.3,relwidth=0.48,relheight=0.10)
         #self.latlonButton.configure(state='disabled')
          
-        self.setJS8CallGridButton = Button(self, text="Send Grid to JS8Call", command=lambda: controller.sendGridToJS8Call(gridrefEntry.get()), bg="white", font=40)
+        self.setJS8CallGridButton = Button(self, text="Send Grid to JS8Call", command=lambda: controller.sendGridToJS8Call(gridrefEntry.get()), bg="white")
         self.setJS8CallGridButton.place(relx=0.02, rely=0.42,relwidth=0.45,relheight=0.2)
         self.setJS8CallGridButton.configure(state='disabled')
         
-        self.sendJS8CallALLCALLButton = Button(self, text="TX Grid", command=lambda: controller.sendGridToALLCALL(gridrefEntry.get()), bg="white", font=50)
+        self.sendJS8CallALLCALLButton = Button(self, text="TX Grid", command=lambda: controller.sendGridToALLCALL(gridrefEntry.get()), bg="white")
         self.sendJS8CallALLCALLButton.place(relx=0.55, rely=0.42,relwidth=0.44,relheight=0.2)
         self.sendJS8CallALLCALLButton.configure(state='disabled')
     
