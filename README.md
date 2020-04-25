@@ -28,6 +28,7 @@ pip3 install gps<br>
 <b>Windows<br>
 py -m pip install maidenhead<br>
 py -m pip install serial<br>
+py -m pip install pserial<br>
 py -m pip install configparser<br>
 py -m pip install gps<br></b>
 
