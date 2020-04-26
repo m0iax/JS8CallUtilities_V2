@@ -22,12 +22,14 @@ Before running for the first time install the required python modules:
 <b>LINUX (including Raspberry Pi)<br>
 pip3 install maidenhead<br>
 pip3 install serial<br>
+pip3 install pyserial<br>  
 pip3 install configparser<br>
 pip3 install gps<br>
 <br></b>
 <b>Windows<br>
 py -m pip install maidenhead<br>
 py -m pip install serial<br>
+py -m pip install pyserial<br>
 py -m pip install configparser<br>
 py -m pip install gps<br></b>
 
