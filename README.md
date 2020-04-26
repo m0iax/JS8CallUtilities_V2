@@ -34,7 +34,7 @@ py -m pip install configparser<br>
 py -m pip install gps<br></b>
 
 <br>
-on unix now enter<br><b> chmod +x js8callutilsGPSD.py</b><br>
+on Linux now enter<br><b> chmod +x js8callutilsGPSD.py</b><br>
 
 you should now be ready to run the app
 <br>
