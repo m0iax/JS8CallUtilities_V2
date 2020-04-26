@@ -21,20 +21,28 @@ Before running for the first time install the required python modules:
 <br>
 <b>LINUX (including Raspberry Pi)<br>
 pip3 install maidenhead<br>
-pip3 install serial<br>
 pip3 install pyserial<br>
 pip3 install configparser<br>
 pip3 install gps<br>
 <br></b>
 <b>Windows<br>
 py -m pip install maidenhead<br>
-py -m pip install serial<br>
 py -m pip install pyserial<br>
 py -m pip install configparser<br>
 py -m pip install gps<br></b>
 
 <br>
 on Linux now enter<br><b> chmod +x js8callutilsGPSD.py</b><br>
+
+<p>Note, I found that on the <b>raspberry pi</b> at least if I had the serial package installed I was not able to use the serial GPS option. I was able to resolve this problem by removing it 
+  
+pip3 uninstall serial
+  
+(note that you should install pyserial as in the above instructions if you want to use grp in serial port mode)
+the comport value to enter should be
+/dev/ttyACM0
+
+</p>
 
 you should now be ready to run the app
 <br>
