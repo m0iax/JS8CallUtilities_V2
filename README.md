@@ -32,7 +32,7 @@ py -m pip install configparser<br>
 py -m pip install gps<br></b>
 
 <br>
-on Linux now enter<br><b> chmod +x js8callutilsGPSD.py</b><br>
+on Linux now enter<br><b> chmod +x JS8CallUtils_v2.py</b><br>
 
 <p>Note, I found that on the <b>raspberry pi</b> at least if I had the serial package installed I was not able to use the serial GPS option. I was able to resolve this problem by removing it 
   
