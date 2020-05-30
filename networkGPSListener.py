@@ -41,6 +41,9 @@ class netWorkGPS(threading.Thread):
         return self.mhGrid
     def setReadGPS(self, read):
         self.readGPS = read
+    def teminate(self):
+        self.listening=False   
+        self.sock.setblocking(False)
     def setShowDebug(self, show):
         self.showOutput=show
 
@@ -72,7 +75,6 @@ class netWorkGPS(threading.Thread):
         print('listening on', ':'.join(map(str, self.listen)))
         self.sock = socket(AF_INET, SOCK_STREAM)
         self.sock.connect(self.listen)
-        
         self.listening = True
         try:
             while self.listening:

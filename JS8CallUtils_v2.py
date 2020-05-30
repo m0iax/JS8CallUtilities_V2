@@ -667,7 +667,11 @@ class App(Tk):
         if self.gpsOptionBeforeRefresh!=self.gpsOption:
             if self.gpsl!=None:
                 print('Shutting down GPS Listener')
+                
                 #self.gpsl.destroy()
+                if isinstance(self.gpsl, networkGPSListener.netWorkGPS):
+                    self.gpsl.teminate()
+                
                 self.gpsl.setReadGPS(False)
                 self.gpsl.join()
                 self.gpsl=None
