@@ -90,6 +90,12 @@ class SettingsPage(Frame):
             self.comportspeedEntry.configure(state='normal')
             self.comportspeedLabel.configure(text="GPS TCP Port")
             self.comportLabel.configure(text="GPS IP Address")
+        
+        elif self.gpstypecombo.get()=="Manual":
+            self.comportEntry.configure(state='normal')
+            self.comportspeedEntry.configure(state='disabled')
+            self.comportspeedLabel.configure(text="GPS TCP Port")
+            self.comportLabel.configure(text="Maidenhead Locator")
             
         else:
             self.comportEntry.configure(state='disabled')
@@ -140,13 +146,15 @@ class SettingsPage(Frame):
         self.gpstypecombo = Combobox(self, state='readonly')
         self.gpstypecombo.bind('<<ComboboxSelected>>', self.comchange)    
        
-        self.gpstypecombo['values']= ("None", "com port", "GPSD", "Network")
+        self.gpstypecombo['values']= ("None", "com port", "GPSD", "Network", "Manual")
         if controller.gpsOption=="None":
             type = 0
         elif controller.gpsOption=="com port":
             type=1
         elif controller.gpsOption=="Network":
             type=3
+        elif controller.gpsOption=="Manual":
+            type=4
         else:
             type=2
         self.gpstypecombo.current(type) #set the selected item
@@ -176,12 +184,18 @@ class SettingsPage(Frame):
         self.comportspeedEntry.place(relx=0.5,rely=y, relwidth=0.48,relheight=relh)
         
         typeString = self.gpstypecombo.get()
-        if typeString=="com port" or typeString=="Network":
+        if typeString=="com port" or typeString=="Network" or typeString=="Manual":
             self.comportEntry.configure(state='normal')
             self.comportspeedEntry.configure(state='normal')
             if (typeString=="Network"):
                 self.comportspeedLabel.configure(text="GPS TCP Port")
                 self.comportLabel.configure(text="GPS IP Address")
+            
+            elif self.gpstypecombo.get()=="Manual":
+                self.comportspeedEntry.configure(state='disabled')
+                self.comportspeedLabel.configure(text="GPS TCP Port")
+                self.comportLabel.configure(text="Maidenhead Locator")
+            
         else:
             self.comportEntry.configure(state='disabled')
             self.comportspeedEntry.configure(state='disabled')
@@ -298,7 +312,11 @@ class GPSPage(Frame):
         self.sendJS8CallALLCALLButton.configure(state='disabled')
     
     def getGridRef(self):
-        mh = self.controller.getGrid()
+        
+        if self.controller.useManualPosition:
+            mh=self.controller.manualposition
+        else:
+            mh = self.controller.getGrid()
         
         if mh!= "No Fix" and mh!='JJ00aa00':
                 self.setJS8CallGridButton.configure(state='normal')
@@ -461,14 +479,20 @@ class App(Tk):
         self.api.sendMessage(messageType,messageText)
     
     def getGrid(self):
-        if self.gpsl==None:
+        
+        if self.useManualPosition==False and self.gpsl==None:
             print('GPS Listener not running. Update settings and try again.')
            # js8callAPIsupport.js8CallUDPAPICalls.showMessage(MSG_ERROR, getStatus()))
             self.showMessage('ERROR', 'GPS Listener not running. Update settings and try again.')
             return
         if self.showoutput==1:
             print('Getting Grid from GPS')
-        gpsText = self.gpsl.getMaidenhead()
+        
+        if self.useManualPosition:
+            gpsText=self.manualposition
+        else:
+            gpsText = self.gpsl.getMaidenhead()
+            
         if self.showoutput==1:
             print(gpsText)
         if gpsText==None:
@@ -486,20 +510,21 @@ class App(Tk):
             
             latlon=''
         
-            if self.gpsl.getStatus().startswith('Error'):
-                self.gpsText=self.gpsl.getStatus()
-                lat=None
-                lon=None
-                latlon=self.gpsl.getStatus()
-            else:
-                lat=self.gpsl.getCurrentLat()
-                lon=self.gpsl.getCurrentLon()
-        
-            if lat!=None:
-                latf = f"{lat:.5f}"
-                lonf = f"{lon:.5f}"
-                latlon=str(latf)+', '+str(lonf)
-        
+            if self.useManualPosition==False:
+                if self.gpsl.getStatus().startswith('Error'):
+                    self.gpsText=self.gpsl.getStatus()
+                    lat=None
+                    lon=None
+                    latlon=self.gpsl.getStatus()
+                else:
+                    lat=self.gpsl.getCurrentLat()
+                    lon=self.gpsl.getCurrentLon()
+            
+                if lat!=None:
+                    latf = f"{lat:.5f}"
+                    lonf = f"{lon:.5f}"
+                    latlon=str(latf)+', '+str(lonf)
+            
             self.var1.set(gpsText)
             self.latlonvar.set(latlon)        
             
@@ -548,9 +573,19 @@ class App(Tk):
         settings_page.grid(row=2, column=2, sticky=W+E+N+S, padx=5, pady=5)
     
     def sendGridToALLCALL(self,gridText):
-        self.api.sendGridToALLCALL(gridText, self.gpsl.getStatus())
+        if self.gpsl!=None:
+            status=self.gpsl.getStatus()
+        if self.useManualPosition==True:
+            status="Manual Grid"
+        
+        self.api.sendGridToALLCALL(gridText, status)
     def sendGridToJS8Call(self, gridText):
-        self.api.sendGridToJS8Call(gridText, self.gpsl.getStatus())
+        if self.gpsl!=None:
+            status=self.gpsl.getStatus()
+        if self.useManualPosition==True:
+            status="Manual Grid"
+            
+        self.api.sendGridToJS8Call(gridText, status)
       
     def __exit__(self, exc_type, exc_val, exc_tb):
         print("Main Window is closing, call any function you'd like here!")
@@ -634,6 +669,8 @@ class App(Tk):
             self.gpsl=None
             
     def refreshSettings(self):
+        
+        self.useManualPosition=False
         self.settingValues = settings.Settings()
 
         self.showoutput = int(self.settingValues.getDebugSettingValue('showoutput'))
@@ -687,6 +724,7 @@ class App(Tk):
                 self.gpsl.setReadGPS(False)
                 self.gpsl.join()
                 self.gpsl=None
+                
             if self.gpsOption!='None':
                 print('Starting GPS Listener')
                 if self.gpsOption=='GPSD':
@@ -696,7 +734,10 @@ class App(Tk):
                     self.gpsl = networkGPSListener.netWorkGPS(self.settingValues.getGPSHardwareSettingValue('gpscomport'),
                                                             self.settingValues.getGPSHardwareSettingValue('gpsportspeed'),
                                                             self.settingValues.getAppSettingValue('precision'),
-                                                            self.showoutput)                                        
+                                                            self.showoutput)   
+                elif self.gpsOption=='Manual':
+                    self.useManualPosition=True
+                    self.manualposition=self.settingValues.getGPSHardwareSettingValue('gpscomport')                                     
                 else:
                     print('Running serial gps again')
                     self.gpsl = serialGPSlistener.GPSListener(self.settingValues.getGPSHardwareSettingValue('gpscomport'),
@@ -704,7 +745,8 @@ class App(Tk):
                                                             self.settingValues.getAppSettingValue('precision'),
                                                             self.showoutput
                                                             )
-                self.gpsl.start()
+                if self.gpsl!=None:
+                    self.gpsl.start()
             else:
                 print('Setting thread to None')
                 self.gpsl=None    
@@ -747,6 +789,8 @@ class App(Tk):
         
         self.gpsOptionBeforeRefresh = self.gpsOption
         
+        self.useManualPosition=False
+        
         self.gpsl=None
         
         if self.gpsOption!="None":
@@ -758,7 +802,10 @@ class App(Tk):
                 self.gpsl = networkGPSListener.netWorkGPS(self.settingValues.getGPSHardwareSettingValue('gpscomport'),
                                                             self.settingValues.getGPSHardwareSettingValue('gpsportspeed'),
                                                             self.settingValues.getAppSettingValue('precision'),
-                                                            self.showoutput)                                        
+                                                            self.showoutput)  
+            elif self.gpsOption=='Manual':
+                self.useManualPosition=True
+                self.manualposition=self.settingValues.getGPSHardwareSettingValue('gpscomport')                                      
             else:
                 self.gpsl = serialGPSlistener.GPSListener(self.settingValues.getGPSHardwareSettingValue('gpscomport'),
                                                         self.settingValues.getGPSHardwareSettingValue('gpsportspeed'),
@@ -766,7 +813,8 @@ class App(Tk):
                                                         self.showoutput
                                                         )
         
-            self.gpsl.start()
+            if self.gpsl!=None:
+                self.gpsl.start()
 
         self.geometry(str(WIDTH)+"x"+str(HEIGHT))
         self.title("JS8Call Utilities by M0IAX")
@@ -788,6 +836,10 @@ class App(Tk):
         self.autoTimeVar.set(self.settingValues.getAppSettingValue('autotimeperiod'))
         self.autoGridToJS8Call.set(self.settingValues.getAppSettingValue('autoonatstart'))
         
+        if self.useManualPosition:
+            self.var1.set(self.manualposition)
+            
+            
         #Main window frame
         container = Frame(self)
         container.pack(side="top", fill="both", expand=True)

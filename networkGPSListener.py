@@ -43,7 +43,8 @@ class netWorkGPS(threading.Thread):
         self.readGPS = read
     def teminate(self):
         self.listening=False   
-        self.sock.setblocking(False)
+        if self.sock!=None:
+            self.sock.setblocking(False)
     def setShowDebug(self, show):
         self.showOutput=show
 
