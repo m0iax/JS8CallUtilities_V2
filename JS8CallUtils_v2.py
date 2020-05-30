@@ -7,6 +7,7 @@ from tkinter import IntVar, messagebox
 
 import gpsdGPSListener
 import serialGPSlistener
+import networkGPSListener
 import webbrowser
 import settings
 import js8callAPIsupport
@@ -80,6 +81,16 @@ class SettingsPage(Frame):
         if self.gpstypecombo.get()=="com port":
             self.comportEntry.configure(state='normal')
             self.comportspeedEntry.configure(state='normal')
+            self.comportspeedLabel.configure(text="GPS COM Port Speed")
+            self.comportLabel.configure(text="GPS COM Port")
+            
+    
+        elif self.gpstypecombo.get()=="Network":
+            self.comportEntry.configure(state='normal')
+            self.comportspeedEntry.configure(state='normal')
+            self.comportspeedLabel.configure(text="GPS TCP Port")
+            self.comportLabel.configure(text="GPS IP Address")
+            
         else:
             self.comportEntry.configure(state='disabled')
             self.comportspeedEntry.configure(state='disabled')
@@ -129,11 +140,13 @@ class SettingsPage(Frame):
         self.gpstypecombo = Combobox(self, state='readonly')
         self.gpstypecombo.bind('<<ComboboxSelected>>', self.comchange)    
        
-        self.gpstypecombo['values']= ("None", "com port", "GPSD")
+        self.gpstypecombo['values']= ("None", "com port", "GPSD", "Network")
         if controller.gpsOption=="None":
             type = 0
         elif controller.gpsOption=="com port":
             type=1
+        elif controller.gpsOption=="Network":
+            type=3
         else:
             type=2
         self.gpstypecombo.current(type) #set the selected item
@@ -144,9 +157,9 @@ class SettingsPage(Frame):
         
         y=self.addY(y)
 
-        comportLabel = Label(self, text="GPS COM Port", anchor="e")
-        comportLabel.place(relx=0.05, rely=y,relwidth=0.4,relheight=relh)
-        comportLabel.config(font=labelfont)           
+        self.comportLabel = Label(self, text="GPS COM Port", anchor="e")
+        self.comportLabel.place(relx=0.05, rely=y,relwidth=0.4,relheight=relh)
+        self.comportLabel.config(font=labelfont)           
         
         self.comportEntry = Entry(self, font=fontsize, textvariable=controller.gpsComPortVar, justify='center')
         self.comportEntry.place(relx=0.5,rely=y, relwidth=0.48,relheight=relh)
@@ -155,16 +168,20 @@ class SettingsPage(Frame):
         y=self.addY(y)
         
         #############################################
-        comportspeedLabel = Label(self, text="GPS COM Port Speed", anchor="e")
-        comportspeedLabel.place(relx=0.05, rely=y,relwidth=0.4,relheight=relh)
-        comportspeedLabel.config(font=labelfont)           
+        self.comportspeedLabel = Label(self, text="GPS COM Port Speed", anchor="e")
+        self.comportspeedLabel.place(relx=0.05, rely=y,relwidth=0.4,relheight=relh)
+        self.comportspeedLabel.config(font=labelfont)           
         
         self.comportspeedEntry = Entry(self, font=fontsize, textvariable=controller.gpsComPortSpeedVar, justify='center')
         self.comportspeedEntry.place(relx=0.5,rely=y, relwidth=0.48,relheight=relh)
         
-        if self.gpstypecombo.get()=="com port":
+        typeString = self.gpstypecombo.get()
+        if typeString=="com port" or typeString=="Network":
             self.comportEntry.configure(state='normal')
             self.comportspeedEntry.configure(state='normal')
+            if (typeString=="Network"):
+                self.comportspeedLabel.configure(text="GPS TCP Port")
+                self.comportLabel.configure(text="GPS IP Address")
         else:
             self.comportEntry.configure(state='disabled')
             self.comportspeedEntry.configure(state='disabled')
@@ -658,8 +675,12 @@ class App(Tk):
                 print('Starting GPS Listener')
                 if self.gpsOption=='GPSD':
                     self.gpsl = gpsdGPSListener.GpsListener( self.settingValues.getAppSettingValue('precision'),
-                                                            self.showoutput
-                                                            )
+                                                            self.showoutput)
+                elif self.gpsOption=='Network':
+                    self.gpsl = networkGPSListener.netWorkGPS(self.settingValues.getGPSHardwareSettingValue('gpscomport'),
+                                                            self.settingValues.getGPSHardwareSettingValue('gpsportspeed'),
+                                                            self.settingValues.getAppSettingValue('precision'),
+                                                            self.showoutput)                                        
                 else:
                     print('Running serial gps again')
                     self.gpsl = serialGPSlistener.GPSListener(self.settingValues.getGPSHardwareSettingValue('gpscomport'),
@@ -717,6 +738,11 @@ class App(Tk):
                 self.gpsl = gpsdGPSListener.GpsListener( self.settingValues.getAppSettingValue('precision'),
                                                         self.showoutput
                                                         )
+            elif self.gpsOption=='Network':
+                self.gpsl = networkGPSListener.netWorkGPS(self.settingValues.getGPSHardwareSettingValue('gpscomport'),
+                                                            self.settingValues.getGPSHardwareSettingValue('gpsportspeed'),
+                                                            self.settingValues.getAppSettingValue('precision'),
+                                                            self.showoutput)                                        
             else:
                 self.gpsl = serialGPSlistener.GPSListener(self.settingValues.getGPSHardwareSettingValue('gpscomport'),
                                                         self.settingValues.getGPSHardwareSettingValue('gpsportspeed'),
@@ -807,12 +833,6 @@ try:
     app.protocol("WM_DELETE_WINDOW", app.ask_quit)
     app.mainloop()
     
-    
-  #  app.gpsl.setReadGPS(False)
-    
 finally:
-    print('Finally Quit')
-   # if app.gpsl!=None:
-   #     app.gpsl.setReadGPS(False)
-   #     app.gpsl.join()
+    print('End of line')
         
