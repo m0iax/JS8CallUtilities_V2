@@ -65,6 +65,8 @@ some systems to start the GPS and get a fix)
 <br>
 The APRS functions should be self explanatory. But if you need help please let me know.
 <br>
+The new networkGPS option has been tested with the Andoid App "GPS Tether". It may work with other NMEA output apps/devices. Please report any problems and I will address them as soon as I can.
+<br>
 You can find my social media contact info here: http:m0iax.com/findme
 
 73!
