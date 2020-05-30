@@ -561,8 +561,9 @@ class App(Tk):
     def ask_quit(self):
         if self.gpsl!=None:
             print('Shutting down GPS Listener')
-            self.gpsl.setReadGPS(False)
-            self.gpsl.join()
+            self.shutdownGPS()
+            #self.gpsl.setReadGPS(False)
+            #self.gpsl.join()
             
         print('Exiting. Thanks for using JS8CallUtils By M0IAX')
         self.destroy()  
@@ -620,7 +621,18 @@ class App(Tk):
         #else:
         #    self.autoGridToJS8Call.set(0)
         #    self.timerStr.set("Timer Not Active")
-
+    def shutdownGPS(self):
+        if self.gpsl!=None:
+            print('Shutting down GPS Listener')
+                
+            #self.gpsl.destroy()
+            if isinstance(self.gpsl, networkGPSListener.netWorkGPS):
+                self.gpsl.teminate()
+                
+            self.gpsl.setReadGPS(False)
+            self.gpsl.join()
+            self.gpsl=None
+            
     def refreshSettings(self):
         self.settingValues = settings.Settings()
 

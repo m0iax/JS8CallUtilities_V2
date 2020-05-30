@@ -91,7 +91,8 @@ class netWorkGPS(threading.Thread):
                 nmeaRows=datalist.decode().split("\r\n")   
                 
                 for row in nmeaRows:
-                    print(row)
+                    if self.showoutput:
+                        print(row)
                 
                 # print (nmeaRows)
                     
