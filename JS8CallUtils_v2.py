@@ -498,7 +498,10 @@ class App(Tk):
         if gpsText==None:
             gpsText = "No Fix"
         
-        ngr = self.gpsl.get_ngr()
+        ngr=None
+        
+        if self.gpsl!=None:
+            ngr = self.gpsl.get_ngr()
         
         if gpsText!=None:
             if gpsText=='None':
@@ -726,16 +729,20 @@ class App(Tk):
                 self.gpsl=None
                 
             if self.gpsOption!='None':
-                print('Starting GPS Listener')
+                print('Determine GPS Listener')
                 if self.gpsOption=='GPSD':
+                    print('Starting GPSD GPS Listener')
                     self.gpsl = gpsdGPSListener.GpsListener( self.settingValues.getAppSettingValue('precision'),
                                                             self.showoutput)
                 elif self.gpsOption=='Network':
+                    print('Starting Network GPS Listener')
                     self.gpsl = networkGPSListener.netWorkGPS(self.settingValues.getGPSHardwareSettingValue('gpscomport'),
                                                             self.settingValues.getGPSHardwareSettingValue('gpsportspeed'),
                                                             self.settingValues.getAppSettingValue('precision'),
                                                             self.showoutput)   
                 elif self.gpsOption=='Manual':
+                    print('Manula Position, not suing GPS')
+                
                     self.useManualPosition=True
                     self.manualposition=self.settingValues.getGPSHardwareSettingValue('gpscomport')                                     
                 else:
@@ -794,6 +801,7 @@ class App(Tk):
         self.gpsl=None
         
         if self.gpsOption!="None":
+            print("GPS Option "+self.gpsOption)
             if self.gpsOption=='GPSD':
                 self.gpsl = gpsdGPSListener.GpsListener( self.settingValues.getAppSettingValue('precision'),
                                                         self.showoutput
