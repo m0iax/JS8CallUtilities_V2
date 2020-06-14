@@ -13,7 +13,7 @@ To use, download the files, ensure you have python version 3 installed and insta
 
 <b>Note that you require Python to be installed version 3.7 and above. Other versions may not work correctly for all the functions</b>
 <br>
-Clone or download and unzip the code. NOw run a command prompt and cd to the downloaded directory.
+Clone or download and unzip the code. Now run a command prompt and cd to the downloaded directory.
 <br>
 <b>cd JS8CallUtilities _V2</b><br>
 <br>
@@ -64,6 +64,8 @@ If you have configured the GPS correctly you should now be able to use the GPS f
 some systems to start the GPS and get a fix)
 <br>
 The APRS functions should be self explanatory. But if you need help please let me know.
+<br>
+By default JS8Call Utilities can only set the text message to transmit, it can't cause JS8Call to send the message. For features like "Auto TX Grid to APRSIS" it can be helpful to have JS8Call signal JS8Call to transmit. To enable this click the blue button in the top right of JS8Call that normally says "Normal+Multi" and selct the AUTO option.
 <br>
 The new networkGPS option has been tested with the Andoid App "GPS Tether". It may work with other NMEA output apps/devices. Please report any problems and I will address them as soon as I can.
 <br>
