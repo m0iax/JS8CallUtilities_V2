@@ -149,7 +149,7 @@ class SettingsPage(Frame):
         self.gpstypecombo.bind('<<ComboboxSelected>>', self.comchange)    
        
         if platform.system()=='Windows':
-            self.gpstypecombo['values']= ("None", "com port", "GPSD", "Network", "Manual", "Windows Location")
+            self.gpstypecombo['values']= ("None", "com port", "GPSD", "Network", "Manual", "Windows Location Services")
         else:
             self.gpstypecombo['values']= ("None", "com port", "GPSD", "Network", "Manual")
 
@@ -161,7 +161,7 @@ class SettingsPage(Frame):
             type=3
         elif controller.gpsOption=="Manual":
             type=4
-        elif controller.gpsOption=="Windows Location":
+        elif controller.gpsOption=="Windows Location Services":
             type=5
         else:
             type=2
@@ -746,7 +746,7 @@ class App(Tk):
                                                             self.settingValues.getGPSHardwareSettingValue('gpsportspeed'),
                                                             self.settingValues.getAppSettingValue('precision'),
                                                             self.showoutput)   
-                elif self.gpsOption=='Windows Location':
+                elif self.gpsOption=='Windows Location Services':
                     print('Using Windows Location Services')
                     self.gpsl = windowsLocation.locationservices(self.settingValues.getAppSettingValue('precision'),
                                                             self.showoutput)  
@@ -821,7 +821,7 @@ class App(Tk):
                                                             self.settingValues.getGPSHardwareSettingValue('gpsportspeed'),
                                                             self.settingValues.getAppSettingValue('precision'),
                                                             self.showoutput)  
-            elif self.gpsOption=='Windows Location':
+            elif self.gpsOption=='Windows Location Services':
                     print('Using Windows Location Services')
                     self.gpsl = windowsLocation.locationservices(
                                                             self.settingValues.getAppSettingValue('precision'),
