@@ -4,7 +4,6 @@ import re
 import time
 import maidenhead as mh
 
-
 class locationservices(threading.Thread):
     def setStatus(self, statusString):
         self.status=statusString  
