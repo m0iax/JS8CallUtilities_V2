@@ -11,6 +11,8 @@ import networkGPSListener
 import webbrowser
 import settings
 import js8callAPIsupport
+import platform
+import windowsLocation
 
 HEIGHT=650
 WIDTH=500
@@ -146,7 +148,11 @@ class SettingsPage(Frame):
         self.gpstypecombo = Combobox(self, state='readonly')
         self.gpstypecombo.bind('<<ComboboxSelected>>', self.comchange)    
        
-        self.gpstypecombo['values']= ("None", "com port", "GPSD", "Network", "Manual")
+        if platform.system()=='Windows':
+            self.gpstypecombo['values']= ("None", "com port", "GPSD", "Network", "Manual", "Windows Location")
+        else:
+            self.gpstypecombo['values']= ("None", "com port", "GPSD", "Network", "Manual")
+
         if controller.gpsOption=="None":
             type = 0
         elif controller.gpsOption=="com port":
@@ -155,13 +161,13 @@ class SettingsPage(Frame):
             type=3
         elif controller.gpsOption=="Manual":
             type=4
+        elif controller.gpsOption=="Windows Location":
+            type=5
         else:
             type=2
         self.gpstypecombo.current(type) #set the selected item
         self.gpstypecombo.place(relx=0.5, rely=y, relwidth=0.48, relheight=relh)
         ###################################################
-        
-
         
         y=self.addY(y)
 
@@ -740,8 +746,12 @@ class App(Tk):
                                                             self.settingValues.getGPSHardwareSettingValue('gpsportspeed'),
                                                             self.settingValues.getAppSettingValue('precision'),
                                                             self.showoutput)   
+                elif self.gpsOption=='Windows Location':
+                    print('Using Windows Location Services')
+                    self.gpsl = windowsLocation.locationservices(self.settingValues.getAppSettingValue('precision'),
+                                                            self.showoutput)  
                 elif self.gpsOption=='Manual':
-                    print('Manula Position, not suing GPS')
+                    print('Manual Position, not suing GPS')
                 
                     self.useManualPosition=True
                     self.manualposition=self.settingValues.getGPSHardwareSettingValue('gpscomport')                                     
@@ -811,6 +821,12 @@ class App(Tk):
                                                             self.settingValues.getGPSHardwareSettingValue('gpsportspeed'),
                                                             self.settingValues.getAppSettingValue('precision'),
                                                             self.showoutput)  
+            elif self.gpsOption=='Windows Location':
+                    print('Using Windows Location Services')
+                    self.gpsl = windowsLocation.locationservices(
+                                                            self.settingValues.getAppSettingValue('precision'),
+                                                            self.showoutput)  
+
             elif self.gpsOption=='Manual':
                 self.useManualPosition=True
                 self.manualposition=self.settingValues.getGPSHardwareSettingValue('gpscomport')                                      
