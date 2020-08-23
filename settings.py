@@ -2,7 +2,15 @@ import configparser
 import os
 import sys
 
-configfilename=sys.path[0]+"/utils.cfg"
+configfilename="utils.cfg"
+
+# determine if application is a script file or standalone exe
+if getattr(sys, 'frozen', False):
+    application_path = os.path.dirname(sys.executable)
+elif __file__:
+    application_path = os.path.dirname(__file__)
+
+config_path = os.path.join(application_path, configfilename)
 
 class Settings():
     def getSettingValue(self, section, settingName):
