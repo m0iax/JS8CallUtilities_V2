@@ -1,4 +1,7 @@
 
 utils.cfg
 __pycache__/
+build/
+dist/
 adifUploader.py
+M0IAX_Utils.png
