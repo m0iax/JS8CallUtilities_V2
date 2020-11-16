@@ -140,7 +140,7 @@ class GPSListener(threading.Thread):
                         lonMin = gpsLon-lonDeg*100
                         lon=lonDeg+lonMin/60
 
-                        self.mhGrid = mh.toMaiden(lat,lon,precision=self.location_precision)
+                        self.mhGrid = mh.to_maiden(lat,lon,precision=self.location_precision)
                         #g=latlong2grid(lat,lon)
                         #self.current_ngr = str(g)
                         self.current_lat = lat

@@ -111,7 +111,7 @@ class GpsListener(threading.Thread):
                     else:
                         latlon = (lat,lon)
                         
-                        grid = mh.toMaiden(lat, lon, precision=self.locator_precision)
+                        grid = mh.to_maiden(lat, lon, precision=self.locator_precision)
                         
                         self.current_lat = lat
                         self.current_lon = lon

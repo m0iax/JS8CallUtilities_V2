@@ -4,6 +4,7 @@ import re
 import time
 import maidenhead as mh
 
+
 class locationservices(threading.Thread):
     def setStatus(self, statusString):
         self.status=statusString  
@@ -65,7 +66,7 @@ class locationservices(threading.Thread):
 
         self.current_lat=lat
         self.current_lon=lon
-        self.mhGrid = mh.toMaiden(lat,lon,precision=self.location_precision)
+        self.mhGrid = mh.to_maiden(lat,lon,precision=self.location_precision)
 
         if self.showOutput:
             print(self.mhGrid) 

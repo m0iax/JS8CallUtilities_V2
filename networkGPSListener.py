@@ -147,7 +147,7 @@ class netWorkGPS(threading.Thread):
                             lonMin = gpsLon-lonDeg*100
                             lon=lonDeg+lonMin/60
 
-                            self.mhGrid = mh.toMaiden(lat,lon,precision=self.location_precision)
+                            self.mhGrid = mh.to_maiden(lat,lon,precision=self.location_precision)
                             self.current_lat = lat
                             self.current_lon = lon
                                 
