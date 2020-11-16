@@ -625,11 +625,11 @@ class App(Tk):
             self.timerStr.set(t)
             
             if self.timer<=0:
-                print('Got to Zero')
+                #print('Got to Zero')
                 gridstr = self.getGrid()
-                print('grd ', gridstr)
+                #print('grd ', gridstr)
                 combotext=self.autocombo.get()
-                print("combo text ", combotext)
+                #print("combo text ", combotext)
                 if gridstr!=None and gridstr!='' and gridstr!="No Fix":
                     if combotext=="Auto update JS8Call Grid":
                         self.sendGridToJS8Call(gridstr)

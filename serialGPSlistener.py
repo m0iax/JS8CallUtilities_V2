@@ -111,7 +111,8 @@ class GPSListener(threading.Thread):
                 if gpsData[0]==time_sentence:
                     gpsTime=gpsData
                     self.current_epoch=1
-                    print(gpsTime)
+                    if showoutput==1:
+                        print(gpsTime)
                 if gpsData[0]==alt_sentence:
                     #$GPGGA
                     gpsAlt = gpsData[9]

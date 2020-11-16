@@ -68,9 +68,9 @@ class js8CallUDPAPICalls:
         self.sock.bind(self.listen)
         
         content, addr = self.sock.recvfrom(65500)
-
+      
         self.reply_to = addr
-
+      
         if messageType!=None:
             self.send(messageType, messageText)
         
