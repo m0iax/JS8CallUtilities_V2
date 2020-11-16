@@ -1,5 +1,12 @@
 JS8CallUtils_v2
 
+<b>Note to existing users or users that already have python installed</b>
+ensure you have the latest maidenhead python code using the command<br>
+<b>pip install --upgrade maidenhead</b>
+<br>
+maidenhead 1.5.0 had chnaged the call to convert lat,lon to maidenhead so if you see and error then please ensure you update.
+<br>
+
 This project is designed for use with JS8Call by Jordan KN4CRD - http://js8call.com
 
 GPS Functions in this version will work on a Windows, Linux (Including Raspberry Pi) and Mac OS computer.
