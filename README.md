@@ -41,7 +41,7 @@ on Linux now enter<br><b> chmod +x JS8CallUtils_v2.py</b><br>
   
 pip3 uninstall serial
   
-(note that you should install pyserial as in the above instructions if you want to use grp in serial port mode)
+(note that you should install pyserial as in the above instructions if you want to use gps in serial port mode)
 the comport value to enter should be
 /dev/ttyACM0
 
