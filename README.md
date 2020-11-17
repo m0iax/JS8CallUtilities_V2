@@ -24,19 +24,15 @@ Clone or download and unzip the code. NOw run a command prompt and cd to the dow
 <br>
 <b>cd JS8CallUtilities _V2</b><br>
 <br>
-Before running for the first time install the required python modules:
+to ensure you have the correct versions of the required python modules run the following command:
+
 <br>
+
 <b>LINUX (including Raspberry Pi)<br>
-pip3 install maidenhead<br>
-pip3 install pyserial<br>
-pip3 install configparser<br>
-pip3 install gps<br>
-<br></b>
+pip3 install -r requirements.txt
+
 <b>Windows<br>
-py -m pip install maidenhead<br>
-py -m pip install pyserial<br>
-py -m pip install configparser<br>
-py -m pip install gps<br></b>
+py -m pip3 install -r requirements.txt
 
 <br>
 on Linux now enter<br><b> chmod +x JS8CallUtils_v2.py</b><br>
