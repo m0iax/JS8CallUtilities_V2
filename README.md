@@ -7,6 +7,10 @@ ensure you have the latest maidenhead python code using the command<br>
 maidenhead 1.5.0 had chnaged the call to convert lat,lon to maidenhead so if you see and error then please ensure you update.
 <br>
 
+<b>NOTE</b>
+In order to use SOTA Spot Option for APRS you need to register. Please see https://www.sotaspots.co.uk/Aprs2Sota_Info.php for more details
+<br>
+
 This project is designed for use with JS8Call by Jordan KN4CRD - http://js8call.com
 
 GPS Functions in this version will work on a Windows, Linux (Including Raspberry Pi) and Mac OS computer.
