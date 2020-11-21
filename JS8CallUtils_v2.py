@@ -346,16 +346,23 @@ class MessagePage(Frame):
             mode = "SMSGTE"
         elif self.combo.get()=="APRS":
             mode=self.combo.get()
-           
-        mode = mode.ljust(9)
+        elif self.combo.get()=="SOTA Spot":
+            mode="SOTA"
+        
         if self.tocall.get()=="":
-            return "Error, no email address is set"
+            if mode!="SOTA":
+                return "Error, no email address is set"
         
-        text=self.st.get('1.0', 'end-1c')  # Get all text in widget.
-    
-        if text=="":
-            return "Error, message is empty, please enter a message to send"
+        if mode=="SOTA":
+            if self.sotafreq.get()=="" or self.sotaMode.get()=="" or self.sotaref.get()=="" or self.sotaNote=="":
+                return "Error, please enter a value in all the SOTA Fields."
+        else:
+            text=self.st.get('1.0', 'end-1c')  # Get all text in widget.
+            if text=="":
+                return "Error, message is empty, please enter a message to send"
         
+        mode = mode.ljust(9)
+
         number = self.controller.seq
         number = format(number, '02d')
         if self.combo.get()=="Email":
@@ -364,6 +371,11 @@ class MessagePage(Frame):
             tocallsign=self.tocall.get()
             tocallsign=tocallsign.ljust(9)
             message = "@APRSIS CMD :"+tocallsign+":"+text+"{"+number+"}"
+        elif self.combo.get()=="SOTA Spot":
+            tocallsign="APRS2SOTA"
+            tocallsign=tocallsign.ljust(9)
+            msgString = self.sotaref.get()+";"+self.sotafreq.get()+";"+self.sotaMode.get()+" "+self.sotaNote.get()
+            message = "@APRSIS CMD :"+tocallsign+":"+msgString+"{"+number+"}"
         else: 
             message = "@APRSIS CMD :"+mode+":@"+self.tocall.get()+" "+text+"{"+number+"}"
         
@@ -406,6 +418,44 @@ class MessagePage(Frame):
             self.callLbl.config(text='Enter Email Address to send to')
         elif mode=="SMS":
             self.callLbl.config(text='Enter cell phone number')
+        elif mode=="SOTA Spot":
+            self.callLbl.config(text='Will be sent to APRS2SOTA')
+            self.tocall.insert(0,"APRS2SOTA")
+
+        self.configureForm(mode)
+
+    def configureForm(self, mode):
+        if mode=="SOTA Spot":
+            self.sotafreq.configure(state='normal', background="white")
+            self.sotaMode.configure(state='normal', background="white")
+            self.sotaNote.configure(state='normal', background="white")
+            self.sotaref.configure(state='normal', background="white")
+            self.st.configure(state='disabled')
+            self.tocall.config({"background": "silver"})
+
+           # self.sotaref.configure( background="silver",state='readonly')
+           
+            self.st.insert('1.0',"Enter SOTA Spot details in boxes below. Complete all 4.")
+            self.tocall.configure(state='readonly')
+            self.st.config({"background": "silver"})
+        else:
+            self.tocall.configure(state='normal')
+            
+            self.sotafreq.configure(state='readonly')
+            self.sotaMode.configure(state='readonly')
+            self.sotaNote.configure(state='readonly')
+            self.sotaref.configure(state='readonly')
+            self.sotaref.config({"background": "silver"})
+            
+            self.st.configure(state='normal')
+            self.st.config({"background": "white"})
+            self.tocall.config({"background": "white"})
+            if self.tocall.get()=="APRS2SOTA":
+                self.tocall.delete(0,END)
+            self.st.delete('1.0', 'end-1c')
+        
+            
+
     def addy(self,y):
         y=y+0.08
         return y
@@ -429,7 +479,7 @@ class MessagePage(Frame):
         y=0.14
         self.combo = Combobox(self, state='readonly')
         self.combo.bind('<<ComboboxSelected>>', self.comboChange)    
-        self.combo['values']= ("Email", "SMS", "APRS")
+        self.combo['values']= ("Email", "SMS", "APRS","SOTA Spot")
         self.combo.current(0) #set the selected item
         self.combo.place(relx=0.42, rely=y, relwidth=0.3, relheight=0.05)
         y=self.addy(y)
@@ -452,25 +502,67 @@ class MessagePage(Frame):
         self.msgLabel = Label(self, text="Message Text", justify="left")
         self.msgLabel.place(relx=0.01, rely=y)
  
-        self.st = ScrolledText(self, height=5)
+        self.st = ScrolledText(self, height=4)
         self.st.place(relx=0.35, rely=y, relwidth=0.6)
  
         y=y+0.05
         self.btn = Button(self, text="Set JS8Call Text", command=self.setAPRSMessage, width=20)
         self.btn.place(relx=0.01, rely=y, relwidth=0.3)
         
+ 
         y=y+0.05 #self.addy(y)
         self.btn2 = Button(self, text="TX With JS8Call", command=self.txAPRSMessage, width=20)
         self.btn2.place(relx=0.01, rely=y, relwidth=0.3)
  
+        
+        y=y+0.1
+        
+        self.sotarefLbl = Label(self, text="SOTA Ref", justify="left")
+        self.sotarefLbl.place(relx=0.01, rely=y)
+        
+        self.sotaref = Entry(self,width=20, state='readonly')
+        self.sotaref.place(relx=0.18, rely=y, relwidth=0.18)
+        
+        self.sotafreqLbl = Label(self, text="Frequency", justify="left")
+        self.sotafreqLbl.place(relx=0.38, rely=y)
+        
+        self.sotafreq = Entry(self,width=20,state='readonly')
+        self.sotafreq.place(relx=0.58, rely=y, relwidth=0.18)
+
+        y=y+0.06
+        
+        self.sotaModeLbl = Label(self, text="Mode", justify="left")
+        self.sotaModeLbl.place(relx=0.01, rely=y)
+        
+        self.sotaMode = Combobox(self, state='readonly')
+        #self.sotaMode.bind('<<ComboboxSelected>>', self.comboChange)   
+        # AM,CW,DATA,DV,FM,SSB,OTHER 
+        self.sotaMode['values']= ("DATA", "AM", "CW","DV", "FM", "SSB", "OTHER")
+        self.sotaMode.current(0) #set the selected item
+        #self.sotaMode.place(relx=0.42, rely=y, relwidth=0.3, relheight=0.05)
+
+        #self.sotaMode = Entry(self,width=10,state='readonly')
+        self.sotaMode.place(relx=0.18, rely=y, relwidth=0.18)
+        
+
+        self.sotaNoteLbl = Label(self, text="Note", justify="left")
+        self.sotaNoteLbl.place(relx=0.38, rely=y)
+        
+        self.sotaNote = Entry(self,width=20,state='readonly')
+        self.sotaNote.place(relx=0.58, rely=y, relwidth=0.18)
+ 
+
         y=self.addy(y)
-        y=self.addy(y)
+        #y=self.addy(y)
         
         self.note1label = Label(self, text="Click Set JS8Call text to set the message text in JS8Call", justify="center", wraplength=300)
         self.note1label.place(relx=0.1, rely=y, relwidth=0.8)
         y=self.addy(y)
         self.note2label = Label(self, text="Click TX with JS8Call to set the message text in JS8Call and start transmitting", justify="center", wraplength=300)
         self.note2label.place(relx=0.1, rely=y, relwidth=0.8)
+        y=self.addy(y)
+        self.note3label = Label(self, text="To use the SOTA Spot function please ensure you are registered see https://www.sotaspots.co.uk/Aprs2Sota_Info.php", justify="center", wraplength=300)
+        self.note3label.place(relx=0.1, rely=y, relwidth=0.8)
        
 class App(Tk):
     def showMessage(self, messagetype, messageString):
@@ -652,12 +744,15 @@ class App(Tk):
         return ''
     def comboChange(self, event):
         mode = self.combo.get()
+        print("mode is "+mode+"<<")
         if mode=="APRS":
             self.callLbl.config(text='Enter Callsign (including SSID)')
         elif mode=="Email":
             self.callLbl.config(text='Enter Email Address to send to')
         elif mode=="SMS":
             self.callLbl.config(text='Enter cell phone number')
+        elif mode=="SOTA Spot":
+            self.callLbl.config(text='Will be sent to APRS2SOTA')
     def cb(self):
         None
         #if self.autoGridToJS8Call.get()==0:
