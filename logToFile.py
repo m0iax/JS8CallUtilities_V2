@@ -41,11 +41,9 @@ class Log():
             # datetime object containing current date and time
             now = datetime.now()
             
-            print("now =", now)
-
             # dd/mm/YY H:M:S
             dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-           # datetime = time.datetime()
+            # datetime = time.datetime()
             text = dt_string+": "+text
             self.writeToFile(gpslogfilename,text)
         

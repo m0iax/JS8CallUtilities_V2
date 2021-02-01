@@ -13,6 +13,7 @@ import settings
 import js8callAPIsupport
 import platform
 import windowsLocation
+import logToFile
 
 HEIGHT=650
 WIDTH=500
@@ -53,6 +54,8 @@ class SettingsPage(Frame):
             autoOption=1
         if val=='Auto TX Grid to APRSIS and Update JS8Call Grid':
             autoOption=2
+        if val=='Log grid to file':
+            autoOption=3
       
 #      self.autodefaultcombo['values']= ("Auto update JS8Call Grid", "Auto TX Grid to APRSIS")
         print('Debug '+self.showdebugcombo.get())
@@ -461,7 +464,7 @@ class MessagePage(Frame):
         return y
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
-        
+        #self.log = logger.
         self.controller=controller
         self.configure(bg="black", bd=5)
         ############################################################
@@ -710,6 +713,7 @@ class App(Tk):
             
         if self.autoGridToJS8Call.get()==1:
             
+            
             if self.timer<=0:
                 self.initTimer()
             self.timer=self.timer-1
@@ -724,15 +728,20 @@ class App(Tk):
                 #print("combo text ", combotext)
                 if gridstr!=None and gridstr!='' and gridstr!="No Fix":
                     if combotext=="Auto update JS8Call Grid":
+                        self.log.writeToGPSLog("Sending Grid to JS8Call "+gridstr)   
                         self.sendGridToJS8Call(gridstr)
                     if combotext=="Auto TX Grid to APRSIS":    
+                        self.log.writeToGPSLog("TX Grid with JS8Call "+gridstr)   
                         self.sendGridToALLCALL(gridstr)
-                    if combotext=="Auto TX Grid to APRSIS and Update JS8Call Grid":    
+                    if combotext=="Auto TX Grid to APRSIS and Update JS8Call Grid": 
+                        self.log.writeToGPSLog("Sending Grid to JS8Call and TX "+gridstr)   
                         self.sendGridToJS8Call(gridstr)
                         self.sendGridToALLCALL(gridstr)
-
+                    if combotext=="Log grid to file": 
+                        self.log.writeToGPSLog("Log to file "+gridstr)   
+                    
                 else:
-                    print('No grid. enabld gps and wait for fix')        
+                    print('No grid. enable gps and wait for fix')        
                 self.initTimer()
         self.after(1000, self.update_timer)
     #def update_status_timer(self):
@@ -870,6 +879,8 @@ class App(Tk):
         
         self.seq=1
         
+        self.log = logToFile.Log()
+        
         self.settingValues = settings.Settings()
         
         self.showoutput = int(self.settingValues.getDebugSettingValue('showoutput'))
@@ -980,7 +991,7 @@ class App(Tk):
         self.autocombo = Combobox(bottomFrame, state='readonly',width=45)
         self.autocombo.state='disabled'
         self.autocombo.bind('<<ComboboxSelected>>', self.autocomboChange)    
-        self.autocombo['values']= ("Auto update JS8Call Grid", "Auto TX Grid to APRSIS", "Auto TX Grid to APRSIS and Update JS8Call Grid")
+        self.autocombo['values']= ("Auto update JS8Call Grid", "Auto TX Grid to APRSIS", "Auto TX Grid to APRSIS and Update JS8Call Grid", "Log grid to file")
  
         self.autocombo.current(self.autooption) #set the selected item
         #self.autocombo.place(relx=0.05,rely=0.63, relwidth=0.9,relheight=0.1)
