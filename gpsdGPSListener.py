@@ -119,7 +119,6 @@ class GpsListener(threading.Thread):
                         self.current_mhgrid = grid
                         currentMHGrid = grid
                        
-                time.sleep(1)
                 
         except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
             print ("\nKilling Thread...")
