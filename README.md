@@ -54,6 +54,8 @@ the comport value to enter should be
 you should now be ready to run the app
 <br>
 Linux:<br>
+  <b>./JS8CallUtils_v2.py</b><br>
+  <p>If that does not work try</p>
 <b>python3 JS8CallUtils_v2.py</b>
 <br>
 Windows<br>
