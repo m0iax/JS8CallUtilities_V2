@@ -274,9 +274,9 @@ class SettingsPage(Frame):
         self.saveButton = Button(self, text="Save", command=lambda:self.saveSettingsToFile(controller), bg="white", font=30)
         self.saveButton.place(relx=0.3,rely=y,relwidth=0.48,relheight=relh)
         
-        aboutMeLabel = Label(self,text="http://m0iax.com/findme", font=30)
+        aboutMeLabel = Label(self,text="https://m0iax.com/findme", font=30)
         aboutMeLabel.place(relx=0.05, rely=0.9,relwidth=0.9,relheight=0.10)
-        aboutMeLabel.bind("<Button-1>", lambda e: callback("http://m0iax.com/findme"))
+        aboutMeLabel.bind("<Button-1>", lambda e: callback("https://m0iax.com/findme"))
         aboutMeLabel.config(font=labelfont)           
         
 class GPSPage(Frame):
