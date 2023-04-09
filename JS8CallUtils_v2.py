@@ -388,7 +388,7 @@ class MessagePage(Frame):
         elif self.combo.get()=="POTA Spot":
             tocallsign="POTAGW"
             tocallsign=tocallsign.ljust(9)
-            msgString = self.sotaref.get()+";"+self.sotafreq.get()+";"+self.sotaMode.get()+" "+self.sotaNote.get()
+            msgString = self.sotaref.get()+" "+self.sotafreq.get()+" "+self.sotaMode.get()+" "+self.sotaNote.get()
             message = "@APRSIS CMD :"+tocallsign+":<MYCALL> "+msgString+"{"+number+"}"
         else: 
             message = "@APRSIS CMD :"+mode+":@"+self.tocall.get()+" "+text+"{"+number+"}"
