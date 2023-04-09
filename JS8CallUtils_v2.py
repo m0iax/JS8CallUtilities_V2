@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 from tkinter import *
 from tkinter.ttk import Combobox
@@ -348,14 +348,23 @@ class MessagePage(Frame):
             mode=self.combo.get()
         elif self.combo.get()=="SOTA Spot":
             mode="SOTA"
-        
+        elif self.combo.get()=="POTA Spot":
+            mode="POTA"
+            
         if self.tocall.get()=="":
-            if mode!="SOTA":
-                return "Error, no email address is set"
+            if mode!="SOTA" and mode!="POTA":
+                if mode=="SMSGTE":
+                    errorText="cell phone number"
+                elif mode=="EMAIL-2":
+                    errorText="email address"
+                elif mode=="APRS":
+                    errorText="destination callsign"
+                    
+                return "Error, no "+errorText+" is set"
         
-        if mode=="SOTA":
+        if mode=="SOTA" or mode=="POTA":
             if self.sotafreq.get()=="" or self.sotaMode.get()=="" or self.sotaref.get()=="" or self.sotaNote=="":
-                return "Error, please enter a value in all the SOTA Fields."
+                return "Error, please enter a value in all the "+mode+" Fields."
         else:
             text=self.st.get('1.0', 'end-1c')  # Get all text in widget.
             if text=="":
@@ -376,6 +385,11 @@ class MessagePage(Frame):
             tocallsign=tocallsign.ljust(9)
             msgString = self.sotaref.get()+";"+self.sotafreq.get()+";"+self.sotaMode.get()+" "+self.sotaNote.get()
             message = "@APRSIS CMD :"+tocallsign+":"+msgString+"{"+number+"}"
+        elif self.combo.get()=="POTA Spot":
+            tocallsign="POTAGW"
+            tocallsign=tocallsign.ljust(9)
+            msgString = self.sotaref.get()+";"+self.sotafreq.get()+";"+self.sotaMode.get()+" "+self.sotaNote.get()
+            message = "@APRSIS CMD :"+tocallsign+":<MYCALL> "+msgString+"{"+number+"}"
         else: 
             message = "@APRSIS CMD :"+mode+":@"+self.tocall.get()+" "+text+"{"+number+"}"
         
@@ -405,6 +419,7 @@ class MessagePage(Frame):
         messageString=self.createMessageString()
         
         if messageString.startswith("Error"):
+            self.controller.showMessage(js8callAPIsupport.MSG_ERROR, messageString)
             return
         
         self.controller.sendMessage(messageType, messageString)
@@ -421,21 +436,21 @@ class MessagePage(Frame):
         elif mode=="SOTA Spot":
             self.callLbl.config(text='Will be sent to APRS2SOTA')
             self.tocall.insert(0,"APRS2SOTA")
-
+        elif mode=="POTA Spot":
+            self.callLbl.config(text='Will be sent to POTAGW')
+            self.tocall.insert(0,"POTAGW")
         self.configureForm(mode)
 
     def configureForm(self, mode):
-        if mode=="SOTA Spot":
+        if mode=="SOTA Spot" or mode=="POTA Spot":
+            modetext=mode[:4]
             self.sotafreq.configure(state='normal', background="white")
             self.sotaMode.configure(state='normal', background="white")
             self.sotaNote.configure(state='normal', background="white")
             self.sotaref.configure(state='normal', background="white")
             self.st.configure(state='disabled')
             self.tocall.config({"background": "silver"})
-
-           # self.sotaref.configure( background="silver",state='readonly')
-           
-            self.st.insert('1.0',"Enter SOTA Spot details in boxes below. Complete all 4.")
+            self.st.insert('1.0',"Enter "+modetext+" Spot details in boxes below. Complete all 4.")
             self.tocall.configure(state='readonly')
             self.st.config({"background": "silver"})
         else:
@@ -450,12 +465,10 @@ class MessagePage(Frame):
             self.st.configure(state='normal')
             self.st.config({"background": "white"})
             self.tocall.config({"background": "white"})
-            if self.tocall.get()=="APRS2SOTA":
+            if self.tocall.get()=="APRS2SOTA" or self.tocall.get()=="POTAGW":
                 self.tocall.delete(0,END)
             self.st.delete('1.0', 'end-1c')
         
-            
-
     def addy(self,y):
         y=y+0.08
         return y
@@ -468,9 +481,6 @@ class MessagePage(Frame):
         #                 APRS Messaging form                     #
         ############################################################
 
-        #aprsFrame=tk.Frame(self.mainWindow, bg="black", bd=5)
-        #aprsFrame.place(relx=0.5,rely=0.48, relwidth=0.95, relheight=0.4, anchor='n')
-
         self.aprstitleLabel = Label(self, font=10, text="APRS Messages")
         self.aprstitleLabel.place(relx=0.05, relwidth=0.9,relheight=0.1)
        
@@ -479,7 +489,7 @@ class MessagePage(Frame):
         y=0.14
         self.combo = Combobox(self, state='readonly')
         self.combo.bind('<<ComboboxSelected>>', self.comboChange)    
-        self.combo['values']= ("Email", "SMS", "APRS","SOTA Spot")
+        self.combo['values']= ("Email", "SMS", "APRS","POTA Spot","SOTA Spot")
         self.combo.current(0) #set the selected item
         self.combo.place(relx=0.42, rely=y, relwidth=0.3, relheight=0.05)
         y=self.addy(y)
@@ -514,10 +524,9 @@ class MessagePage(Frame):
         self.btn2 = Button(self, text="TX With JS8Call", command=self.txAPRSMessage, width=20)
         self.btn2.place(relx=0.01, rely=y, relwidth=0.3)
  
-        
         y=y+0.1
         
-        self.sotarefLbl = Label(self, text="SOTA Ref", justify="left")
+        self.sotarefLbl = Label(self, text="Spot Ref", justify="left")
         self.sotarefLbl.place(relx=0.01, rely=y)
         
         self.sotaref = Entry(self,width=20, state='readonly')
@@ -535,25 +544,19 @@ class MessagePage(Frame):
         self.sotaModeLbl.place(relx=0.01, rely=y)
         
         self.sotaMode = Combobox(self, state='readonly')
-        #self.sotaMode.bind('<<ComboboxSelected>>', self.comboChange)   
-        # AM,CW,DATA,DV,FM,SSB,OTHER 
-        self.sotaMode['values']= ("DATA", "AM", "CW","DV", "FM", "SSB", "OTHER")
+        
+        self.sotaMode['values']= ("JS8", "DATA", "AM", "CW","DV", "FM", "SSB", "OTHER")
         self.sotaMode.current(0) #set the selected item
-        #self.sotaMode.place(relx=0.42, rely=y, relwidth=0.3, relheight=0.05)
-
-        #self.sotaMode = Entry(self,width=10,state='readonly')
+        
         self.sotaMode.place(relx=0.18, rely=y, relwidth=0.18)
         
-
         self.sotaNoteLbl = Label(self, text="Note", justify="left")
         self.sotaNoteLbl.place(relx=0.38, rely=y)
         
         self.sotaNote = Entry(self,width=20,state='readonly')
         self.sotaNote.place(relx=0.58, rely=y, relwidth=0.18)
  
-
         y=self.addy(y)
-        #y=self.addy(y)
         
         self.note1label = Label(self, text="Click Set JS8Call text to set the message text in JS8Call", justify="center", wraplength=300)
         self.note1label.place(relx=0.1, rely=y, relwidth=0.8)
@@ -753,6 +756,9 @@ class App(Tk):
             self.callLbl.config(text='Enter cell phone number')
         elif mode=="SOTA Spot":
             self.callLbl.config(text='Will be sent to APRS2SOTA')
+        elif mode=="POTA Spot":
+            self.callLbl.config(text='Will be sent to POTAGW')    
+        
     def cb(self):
         None
         #if self.autoGridToJS8Call.get()==0:
