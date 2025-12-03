@@ -343,7 +343,7 @@ class MessagePage(Frame):
         if self.combo.get()=="Email":
             mode="EMAIL-2"
         elif self.combo.get()=="SMS":
-            mode = "SMSGTE"
+            mode = "SMS      "
         elif self.combo.get()=="APRS":
             mode=self.combo.get()
         elif self.combo.get()=="SOTA Spot":
