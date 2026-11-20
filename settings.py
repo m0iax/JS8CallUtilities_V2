@@ -28,11 +28,15 @@ class Settings():
                        gpscomport,
                        gpsportspeed,
                        gpsoption,
-                       showdebug):
+                       showdebug,
+                       transport='UDP'):
             
         config = configparser.ConfigParser()
-        config['NETWORK'] = {'serverip': serverip,
-                                'serverport': int(serverport)}
+        config['NETWORK'] = {
+            'serverip': serverip,
+            'serverport': int(serverport),
+            'transport': transport.upper()
+        }
         config['APP'] = {'autotimeperiod': int(autotimeperiod),
                         'autoonatstart':int(autoonatstart),
                         'autoselectedoption':int(autoselected),
@@ -55,8 +59,11 @@ class Settings():
         if not os.path.isfile(configFileName):
             
             config = configparser.ConfigParser()
-            config['NETWORK'] = {'serverip': '127.0.0.1',
-                                 'serverport': 2242}
+            config['NETWORK'] = {
+                'serverip': '127.0.0.1',
+                'serverport': 2242,
+                'transport': 'UDP'
+            }
             config['APP'] = {'autotimeperiod': 10,
                             'autoonatstart':0,
                             'autoselectedoption':0,
@@ -71,7 +78,6 @@ class Settings():
             with open(configFileName, 'w') as configfile:
                 config.write(configfile)
                 configfile.close()
-        
         return config
     
     def __init__(self, *args, **kwargs):
@@ -81,6 +87,10 @@ class Settings():
     
     def getNetworkSettingValue(self, settingName):
         return self.getSettingValue('NETWORK', settingName)
+    def getNetworkTransport(self):
+        return self.config.get(
+            'NETWORK', 'transport', fallback='UDP'
+        ).upper()
     def getAppSettingValue(self, settingName):
         return self.getSettingValue('APP', settingName)
     def getGPSHardwareSettingValue(self, settingName):
@@ -98,4 +108,4 @@ class Settings():
         return config
     
 
-    
+

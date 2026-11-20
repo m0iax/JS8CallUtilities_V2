@@ -96,4 +96,27 @@ class js8CallUDPAPICalls:
         messageToSend = TXT_ALLCALLGRID + gridText
         print("Sending ", messageToSend)
         self.sendMessageAndClose(TYPE_TX_GRID, messageToSend)
-    
+
+
+class js8CallTCPAPICalls(js8CallUDPAPICalls):
+    """JS8Call API transport using newline-delimited JSON over TCP."""
+
+    def __init__(self, serverip, serverport, timeout=5.0):
+        super().__init__(serverip, serverport)
+        self.timeout = timeout
+
+    def sendMessage(self, messageType, messageText):
+        from socket import create_connection
+
+        params = {"_ID": int(time.time() * 1000)}
+        message = self.to_message(
+            messageType, messageText, params
+        )
+
+        with create_connection(
+            self.listen, timeout=self.timeout
+        ) as sock:
+            sock.sendall((message + "\n").encode("utf-8"))
+
+    def sendMessageAndClose(self, messageType, messageText):
+        self.sendMessage(messageType, messageText)
