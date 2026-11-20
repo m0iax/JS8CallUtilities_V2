@@ -70,7 +70,8 @@ class SettingsPage(Frame):
                                            self.comportEntry.get(),
                                            self.comportspeedEntry.get(),
                                            self.gpstypecombo.get(),
-                                           debug)
+                                           debug,
+                                           controller.networkTransport.get())
         
         controller.refreshSettings()
         
@@ -130,7 +131,7 @@ class SettingsPage(Frame):
         y=self.addY(y)
         
         ##############################################
-        serverPortLabel = Label(self, text="JS8Call UDP Port", anchor="e")
+        serverPortLabel = Label(self, text="JS8Call API Port", anchor="e")
         serverPortLabel.place(relx=0.05, rely=y,relwidth=0.4,relheight=relh)
         serverPortLabel.config(font=labelfont)           
         
@@ -139,7 +140,25 @@ class SettingsPage(Frame):
         
         #############################################
         y=self.addY(y)
-        
+        transportLabel = Label(
+            self, text="JS8Call API Transport", anchor="e"
+        )
+        transportLabel.place(
+            relx=0.05, rely=y, relwidth=0.4, relheight=relh
+        )
+        transportLabel.config(font=labelfont)
+
+        self.transportCombo = Combobox(
+            self,
+            textvariable=controller.networkTransport,
+            values=("UDP", "TCP"),
+            state="readonly"
+        )
+        self.transportCombo.place(
+            relx=0.5, rely=y, relwidth=0.48, relheight=relh
+        )
+
+        y=self.addY(y)
         gpstypecomboLabel = Label(self, text="GPS Interface", anchor="e")
         gpstypecomboLabel.place(relx=0.05, rely=y,relwidth=0.4,relheight=relh)
         gpstypecomboLabel.config(font=labelfont)           
@@ -776,7 +795,6 @@ class App(Tk):
         
         self.useManualPosition=False
         self.settingValues = settings.Settings()
-
         self.showoutput = int(self.settingValues.getDebugSettingValue('showoutput'))
         
         self.timeinmins = int(self.settingValues.getAppSettingValue('autotimeperiod'))
@@ -787,12 +805,25 @@ class App(Tk):
         
         self.MAX_TIMER=self.timeinmins*60    
     
-        self.serverPortVar = StringVar()
-        self.serverVar = IntVar()
-        
-        self.serverPortVar.set(int(self.settingValues.getNetworkSettingValue('serverport')))
-        self.serverVar.set(self.settingValues.getNetworkSettingValue('serverip'))
-        
+        self.serverPortVar.set(
+            self.settingValues.getNetworkSettingValue('serverport')
+        )
+        self.serverVar.set(
+            self.settingValues.getNetworkSettingValue('serverip')
+        )
+        self.networkTransport.set(
+            self.settingValues.getNetworkTransport()
+        )
+        api_class = (
+            js8callAPIsupport.js8CallTCPAPICalls
+            if self.networkTransport.get() == 'TCP'
+            else js8callAPIsupport.js8CallUDPAPICalls
+        )
+
+        self.api = api_class(
+            self.settingValues.getNetworkSettingValue('serverip'),
+            int(self.settingValues.getNetworkSettingValue('serverport'))
+        )
         self.gpsOption = self.settingValues.getGPSHardwareSettingValue('option')
     
         self.gpsComPortVar = StringVar()
@@ -871,6 +902,9 @@ class App(Tk):
         self.seq=1
         
         self.settingValues = settings.Settings()
+        self.networkTransport = StringVar(
+            value=self.settingValues.getNetworkTransport()
+        )
         
         self.showoutput = int(self.settingValues.getDebugSettingValue('showoutput'))
         
@@ -883,13 +917,21 @@ class App(Tk):
         self.MAX_TIMER=self.timeinmins*60    
     
         self.serverPortVar = StringVar()
-        self.serverVar = IntVar()
+        self.serverVar = StringVar()
         
         self.serverPortVar.set(int(self.settingValues.getNetworkSettingValue('serverport')))
         self.serverVar.set(self.settingValues.getNetworkSettingValue('serverip'))
         
-        self.api = js8callAPIsupport.js8CallUDPAPICalls(self.settingValues.getNetworkSettingValue('serverip'),
-                                                        int(self.settingValues.getNetworkSettingValue('serverport')))
+        api_class = (
+            js8callAPIsupport.js8CallTCPAPICalls
+            if self.networkTransport.get() == 'TCP'
+            else js8callAPIsupport.js8CallUDPAPICalls
+        )
+
+        self.api = api_class(
+            self.settingValues.getNetworkSettingValue('serverip'),
+            int(self.settingValues.getNetworkSettingValue('serverport'))
+        )
         
         self.gpsOption = self.settingValues.getGPSHardwareSettingValue('option')
     
